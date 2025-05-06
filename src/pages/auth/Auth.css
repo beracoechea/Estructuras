@@ -1,0 +1,107 @@
+.login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1E3A8A, #24334a); /* Tonos de azul */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .login-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Puedes usar una imagen sutil con motivos de ajedrez o un patrón abstracto dorado */
+    background: url('../../Images/fondo.jpg') center/cover no-repeat;
+    opacity: 0.1; /* Muy sutil */
+  }
+  
+  .login-page h1 {
+    font-size: 3.5em; /* Título más prominente */
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 10;
+    letter-spacing: -0.03em;
+    color: #FFD700; /* Dorado para el título */
+  }
+  
+  .logo-stratego {
+    width: 80px; /* Ajusta el tamaño según necesites */
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.3));
+    z-index: 10;
+  }
+  
+  .login-info {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+  }
+  
+  .login-info p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  
+  .button-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+    z-index: 10;
+  }
+  
+  .login-with-google-btn {
+    background-color: #fff;
+    color: #1E3A8A; /* Azul oscuro para el texto */
+    font-weight: 600;
+    border: 2px solid #FFD700; /* Borde dorado */
+    border-radius: 10px;
+    padding: 18px 40px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-image: url('../../Images/google.svg');
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-size: 24px;
+    padding-left: 60px;
+    z-index: 20;
+  }
+  
+  .login-with-google-btn:hover {
+    background-color: #F0F8FF; /* Azul muy claro al hacer hover */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-color: #B8860B; /* Tono de dorado más oscuro al hacer hover */
+  }
+  
+  .login-with-google-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px #FFD70080; /* Contorno dorado al enfocar */
+  }
+  
+  .unauthorized-email {
+    color: #FF4D4D; /* Rojo para indicar error */
+    margin-top: 15px;
+    font-weight: bold;
+  }
