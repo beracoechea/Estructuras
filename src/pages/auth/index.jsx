@@ -24,7 +24,7 @@ export const Auth = () => {
           isAuth: true,
         };
         localStorage.setItem("auth", JSON.stringify(authInfo));
-        navigate("/extructuras");
+        navigate("/estructuras");
       } else {
         console.warn(`Correo electrónico no autorizado: ${email}`);
         setUnauthorized(true);

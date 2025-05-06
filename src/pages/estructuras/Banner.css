@@ -1,0 +1,241 @@
+/* Estructuras.css */
+.estructuras-page-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más moderna */
+}
+
+.sidebar-user-info {
+    width: 30%;
+    max-width: 380px; /* Un poco más de espacio si es necesario */
+    min-width: 240px;
+    height: 100vh;
+    padding: 30px 25px; /* Mayor padding vertical */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-right: 1px solid #dde1e6; /* Borde más suave */
+    overflow-y: auto;
+    transition: background-color 0.4s ease, color 0.4s ease; /* Transición más suave */
+    box-shadow: 3px 0px 15px rgba(0, 0, 0, 0.05); /* Sombra sutil para dar profundidad */
+}
+
+/* --- MODO CONSULTA (AZUL SOFISTICADO) --- */
+.sidebar-mode-consulta {
+    background-color: #3A5A9C; /* Un azul más profundo y corporativo */
+    color: #ffffff;
+}
+
+.sidebar-mode-consulta h1,
+.sidebar-mode-consulta h2 {
+    color: #ffffff;
+}
+
+.sidebar-mode-consulta .user-email {
+    color: #bac8e0; /* Un blanco azulado más suave para el email */
+}
+
+.sidebar-mode-consulta .sidebar-nav a {
+    color: #c5d9f0; /* Azul más claro para enlaces */
+    background-color: transparent;
+}
+.sidebar-mode-consulta .sidebar-nav a:hover {
+    background-color: #4A6BAC; /* Azul ligeramente más claro al pasar el mouse */
+    color: #ffffff;
+}
+.sidebar-mode-consulta .mode-toggle-button {
+    background-color: #E6B800; /* Un dorado más rico */
+    color: #403100; /* Texto oscuro para contraste con dorado */
+    border: 1px solid #D4A700; /* Borde sutil para el botón dorado */
+}
+.sidebar-mode-consulta .mode-toggle-button:hover {
+    background-color: #CCA300; /* Dorado más oscuro */
+}
+
+
+/* --- MODO EDICIÓN (DORADO ELEGANTE) --- */
+.sidebar-mode-edicion {
+    background-color: #E6B800; /* Dorado más rico */
+    color: #403100;
+}
+
+.sidebar-mode-edicion h1,
+.sidebar-mode-edicion h2 {
+    color: #403100; /* Marrón dorado oscuro para títulos */
+}
+
+.sidebar-mode-edicion .user-email {
+    color: #6B5800; /* Marrón dorado más suave para el email */
+}
+
+.sidebar-mode-edicion .sidebar-nav a {
+    color: #8C7100; /* Marrón dorado para enlaces */
+    background-color: transparent;
+}
+.sidebar-mode-edicion .sidebar-nav a:hover {
+    background-color: #F0C42A; /* Dorado brillante al pasar el mouse */
+    color: #403100;
+}
+.sidebar-mode-edicion .mode-toggle-button {
+    background-color: #3A5A9C; /* Botón azul */
+    color: #ffffff;
+    border: 1px solid #2E4A8C; /* Borde sutil para el botón azul */
+}
+.sidebar-mode-edicion .mode-toggle-button:hover {
+    background-color: #2E4A8C; /* Azul más oscuro */
+}
+
+
+/* --- ESTILOS COMUNES DEL SIDEBAR --- */
+.sidebar-user-info .user-photo {
+    width: 110px; /* Un poco más grande */
+    height: 110px;
+    border-radius: 50%;
+    margin-bottom: 20px; /* Mayor margen inferior */
+    border: 4px solid #ffffff; /* Borde blanco más grueso */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+    object-fit: cover;
+}
+
+.sidebar-user-info h1 { /* "Bienvenido:" */
+    font-size: 1.2em; /* Ligeramente más grande */
+    font-weight: 300; /* Más ligero */
+    margin-bottom: 4px;
+    margin-top: 0; /* Ajustado */
+}
+
+.sidebar-user-info h2 { /* Nombre del usuario */
+    font-size: 1.6em; /* Ligeramente más grande */
+    font-weight: 600; /* Semi-bold */
+    margin-top: 0;
+    margin-bottom: 10px; /* Mayor margen */
+    word-wrap: break-word;
+    letter-spacing: 0.5px; /* Espaciado ligero */
+}
+
+.sidebar-user-info .user-email {
+    font-size: 0.95em; /* Ligeramente más grande */
+    margin-bottom: 25px; /* Mayor margen */
+    word-wrap: break-word;
+}
+
+/* Estilo base para los botones principales del sidebar */
+.sidebar-action-button {
+    width: 90%;
+    max-width: 220px;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500; /* Peso medio */
+    text-align: center;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.sidebar-action-button:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px); /* Ligero efecto de elevación */
+}
+.sidebar-action-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+
+.sidebar-user-info .mode-toggle-button {
+    /* Hereda de .sidebar-action-button si aplicas ambas clases en el JSX */
+    /* Si no, copia los estilos de .sidebar-action-button aquí */
+    width: 90%;
+    max-width: 220px;
+    padding: 12px 15px;
+    /* border: none; (definido por modo) */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+.sidebar-user-info .mode-toggle-button:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+.sidebar-user-info .mode-toggle-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+
+.sidebar-user-info .sidebar-nav {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.sidebar-user-info .sidebar-nav a {
+    display: block;
+    padding: 12px 15px; /* Mayor padding */
+    text-decoration: none;
+    border-radius: 6px; /* Bordes más redondeados */
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.sidebar-user-info .logout-button {
+    /* Hereda de .sidebar-action-button si aplicas ambas clases en el JSX */
+    /* Si no, copia los estilos de .sidebar-action-button aquí */
+    width: 90%;
+    max-width: 220px;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    margin-top: auto; /* Empuja al final */
+    background-color: #e74c3c; /* Rojo para logout */
+    color: white;
+}
+.sidebar-user-info .logout-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+.sidebar-user-info .logout-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+
+/* --- RESTO DE ESTILOS --- */
+.main-content-estructuras {
+    flex-grow: 1;
+    height: 100vh;
+    padding: 30px; /* Mayor padding */
+    box-sizing: border-box;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.2em;
+    color: #555; /* Color de texto para el loader */
+}

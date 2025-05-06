@@ -1,0 +1,357 @@
+/* src/pages/estructuras/EstructuraConsulta.css o donde lo tengas */
+
+/* --- Estilos Generales del Contenedor (sin cambios mayores) --- */
+.estructura-consulta-container {
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f7f9; /* Un fondo ligeramente diferente para la página */
+}
+
+.estructura-consulta-container h1 {
+    margin-bottom: 15px; /* Un poco más de espacio */
+    color: #2c3e50; /* Tono azul oscuro, más moderno */
+    font-size: 1.9em; /* Ligeramente más grande */
+    border-bottom: 3px solid #007bff; /* Un acento de color primario */
+    padding-bottom: 12px;
+    font-weight: 600;
+}
+
+.user-greeting {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 25px; /* Más espacio */
+}
+
+/* --- Contenedores de Estado (sin cambios mayores, ya están bien) --- */
+.consulta-status-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    text-align: center; /* Para el botón de reintentar */
+}
+.consulta-status-container.error { /* Contenedor para el mensaje y botón */
+    flex-direction: column; /* Apila el mensaje y el botón */
+    gap: 15px; /* Espacio entre mensaje y botón */
+}
+
+.consulta-status-container.error p {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin: 0; /* Quita margen por defecto del p */
+}
+.consulta-status-container.error button { /* Estilo para el botón reintentar */
+    background-color: #D8000C;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+.consulta-status-container.error button:hover {
+    background-color: #b8000a;
+}
+
+
+.consulta-status-container.no-data p {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin: 0;
+}
+
+/* --- Contenedor de Tarjetas con Scroll --- */
+.estructuras-scroll-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px 5px; /* Ajuste de padding */
+    display: grid;
+    /* Tarjetas más pequeñas: ajusta minmax para el ancho mínimo */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Reducido de 280px */
+    gap: 25px; /* Un poco más de espacio entre tarjetas */
+}
+
+/* --- Estilos Mejorados para las Tarjetas (.estructura-card) --- */
+.estructura-card {
+    background-color: #ffffff;
+    /* Borde más sutil o quitarlo si el shadow es suficiente */
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #007bff; /* Acento de color a la izquierda */
+    border-radius: 8px; /* Bordes ligeramente menos redondeados, más nítidos */
+    padding: 18px; /* Padding reducido para hacerla un poco más compacta */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); /* Sombra más suave */
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px; /* Altura mínima para dar consistencia si hay poco contenido */
+}
+
+.estructura-card:hover,
+.estructura-card:focus-within { /* :focus-within para accesibilidad con teclado */
+    transform: translateY(-4px); /* Efecto de elevación más sutil */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    border-left-color: #0056b3; /* Oscurece el acento al hacer hover */
+}
+
+.estructura-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px; /* Espacio ajustado */
+    color: #0056b3; /* Un azul más oscuro y legible para el título */
+    font-size: 1em; /* Tamaño de fuente reducido para el título */
+    font-weight: 600; /* Un poco más de peso */
+    line-height: 1.3;
+}
+
+/* Estilos para los campos individuales dentro de la tarjeta */
+.estructura-card .card-field {
+    font-size: 0.80em; /* Ligeramente más pequeño */
+    color: #495057; /* Color de texto principal */
+    line-height: .85;
+    margin-bottom: 6px; /* Espacio entre campos */
+}
+
+.estructura-card .card-field strong {
+    color: #343a40; /* Color para las etiquetas en negrita */
+    font-weight: 500;
+}
+
+.estructura-card .card-description { /* Para las observaciones u otra descripción larga */
+    font-size: 0.88em;
+    color: #6c757d; /* Un gris más suave para texto secundario */
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 12px; /* Espacio antes del ID */
+}
+
+.estructura-card .card-id-display {
+    font-size: 0.75em; /* ID más pequeño */
+    color: #adb5bd; /* Color muy sutil para el ID */
+    margin-top: auto;
+    align-self: flex-start;
+    background-color: #f8f9fa; /* Fondo ligero para el ID */
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+/* Estilo para el prompt "Clic para editar" en EstructuraEdicion */
+.estructura-card .card-edit-prompt {
+    font-size: 0.8em;
+    color: #007bff;
+    text-align: right;
+    margin-top: 8px;
+    font-style: italic;
+}
+.estructura-card.card-editable:hover .card-edit-prompt {
+    text-decoration: underline;
+}
+
+
+/* --- Estilos para el botón "Añadir Nueva Estructura" --- */
+/* (Asumiendo que está en un div con clase .edicion-header en EstructuraEdicion.jsx) */
+.edicion-header {
+    display: flex;
+    justify-content: space-between; /* Alinea el título a la izq y botón a la der */
+    align-items: center;
+    margin-bottom: 25px; /* Espacio debajo del header de edición */
+}
+
+.edicion-header h1 { /* Para que el h1 no tome todo el ancho si está en el header */
+    margin-bottom: 0; /* Quitar margen inferior si está dentro de flex */
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.button-add-new {
+    background-color: #007bff; /* Color primario azul */
+    color: white;
+    border: none;
+    padding: 12px 22px; /* Padding generoso */
+    font-size: 0.95em;
+    font-weight: 500;
+    border-radius: 6px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3); /* Sombra sutil del color del botón */
+    display: inline-flex; /* Para alinear ícono y texto si se añade un ícono */
+    align-items: center;
+    gap: 8px; /* Espacio si añades un ícono después */
+}
+
+.button-add-new:hover,
+.button-add-new:focus {
+    background-color: #0056b3; /* Un azul más oscuro al hacer hover/focus */
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.4);
+    outline: none; /* Quitar outline por defecto en focus si se desea */
+}
+
+.button-add-new:active {
+    background-color: #004085; /* Aún más oscuro al presionar */
+    transform: translateY(1px); /* Efecto de presión */
+}
+
+.estructura-card {
+    /* ... otros estilos de tu .estructura-card ... */
+    border-left: 5px solid #6c757d; /* Un color por defecto para el borde izquierdo */
+    /* transición para el cambio de color del borde si lo deseas */
+    transition: transform 0.2s ease-out, 
+                box-shadow 0.2s ease-out, 
+                border-left-color 0.3s ease-in-out; 
+}
+
+/* Clases específicas para cada Tipo de Estructura */
+.estructura-card.tipo-default {
+    border-left-color: #6c757d; /* Gris secundario (para fallback o tipos no mapeados) */
+}
+
+.estructura-card.tipo-sociedad-civil {
+    border-left-color: #17a2b8; /* Azul Cyan (Info) */
+}
+/* Opcional: Cambiar también el color del título para este tipo */
+/* .estructura-card.tipo-sociedad-civil h3 { color: #17a2b8; } */
+
+.estructura-card.tipo-asociacion-patronal {
+    border-left-color: #28a745; /* Verde (Success) */
+}
+
+.estructura-card.tipo-sindicato {
+    border-left-color: #ffc107; /* Amarillo (Warning) */
+}
+/* Si el amarillo es muy claro para el borde, considera un naranja más oscuro para sindicato */
+/* .estructura-card.tipo-sindicato { border-left-color: #fd7e14; } */
+
+
+.estructura-card.tipo-confederaciones {
+    border-left-color: #6f42c1; /* Púrpura distintivo */
+}
+
+.estructura-card.tipo-sofom {
+    border-left-color: #fd7e14; /* Naranja (o un color específico para SOFOM) */
+}
+
+.estructura-card.tipo-otro {
+    border-left-color: #adb5bd; /* Un gris más claro para "Otro" */
+}
+
+.legend-container {
+    margin-bottom: 25px; /* Espacio debajo de la leyenda */
+    padding: 15px 20px;
+    background-color: #f8f9fa; /* Un fondo sutil para la leyenda */
+    border: 1px solid #dee2e6; /* Borde similar al de las tarjetas */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra muy ligera */
+}
+
+.legend-title {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.1em; /* Tamaño del título de la leyenda */
+    font-weight: 600;
+    color: #343a40; /* Color oscuro para el título */
+}
+
+.legend-list {
+    list-style: none; /* Quitar viñetas de la lista */
+    padding: 0;
+    margin: 0;
+    display: flex; /* Para mostrar en línea si hay espacio, o envolver */
+    flex-wrap: wrap; /* Permitir que los items pasen a la siguiente línea */
+    gap: 10px 20px; /* Espacio entre items (vertical y horizontal) */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em; /* Tamaño del texto de la leyenda */
+}
+
+.legend-color-swatch {
+    display: inline-block;
+    width: 16px;  /* Ancho del cuadrito de color */
+    height: 16px; /* Alto del cuadrito de color */
+    margin-right: 8px; /* Espacio entre el color y el texto */
+    border-radius: 4px; /* Hacer los cuadritos ligeramente redondeados */
+    vertical-align: middle; /* Alinear con el texto */
+    /* El color de fondo se aplicará con las clases .tipo-* */
+}
+
+.legend-label {
+    color: #495057; /* Color del texto de la etiqueta */
+}
+
+/* Colores de fondo para los swatches de la leyenda */
+/* Asegúrate que estos colores coincidan con los border-left-color de tus tarjetas */
+.legend-color-swatch.tipo-default { background-color: #6c757d; }
+.legend-color-swatch.tipo-sociedad-civil { background-color: #17a2b8; }
+.legend-color-swatch.tipo-asociacion-patronal { background-color: #28a745; }
+.legend-color-swatch.tipo-sindicato { background-color: #ffc107; } /* O #fd7e14 si cambiaste el color del borde */
+.legend-color-swatch.tipo-confederaciones { background-color: #aa82f3; }
+.legend-color-swatch.tipo-sofom { background-color: #fd7e14; }
+.legend-color-swatch.tipo-otro { background-color: #adb5bd; }
+
+/* --- (Asegúrate que las clases de borde para .estructura-card sigan existiendo) --- */
+/* Estas clases definen el color del borde izquierdo de las tarjetas */
+.estructura-card.tipo-default { border-left-color: #6c757d; }
+.estructura-card.tipo-sociedad-civil { border-left-color: #17a2b8; }
+.estructura-card.tipo-asociacion-patronal { border-left-color: #28a745; }
+.estructura-card.tipo-sindicato { border-left-color: #ffc107; } /* O #fd7e14 */
+.estructura-card.tipo-confederaciones { border-left-color: #aa82f3; }
+.estructura-card.tipo-sofom { border-left-color: #fd7e14; }
+.estructura-card.tipo-otro { border-left-color: #adb5bd; }
+
+.filter-container {
+    margin-bottom: 25px; /* Espacio debajo de los filtros */
+    padding-bottom: 20px; /* Espacio antes del separador */
+    border-bottom: 1px solid #e0e0e0; /* Separador sutil */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Para que los botones se ajusten en pantallas pequeñas */
+    gap: 10px; /* Espacio entre la etiqueta y los botones, y entre botones */
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #343a40; /* Color oscuro para la etiqueta */
+    margin-right: 5px; /* Pequeño espacio antes del primer botón */
+    font-size: 0.95em;
+}
+
+.filter-button {
+    background-color: #f8f9fa; /* Fondo muy claro para botones inactivos */
+    border: 1px solid #ced4da; /* Borde sutil */
+    color: #495057; /* Color de texto para botones inactivos */
+    padding: 8px 16px; /* Padding cómodo */
+    border-radius: 20px; /* Botones estilo "píldora" */
+    cursor: pointer;
+    font-size: 0.9em; /* Tamaño de fuente para los botones */
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none; /* Quitar outline por defecto */
+}
+
+.filter-button:hover {
+    background-color: #e9ecef; /* Un gris un poco más oscuro al pasar el ratón */
+    border-color: #adb5bd;
+    color: #212529;
+}
+
+.filter-button.active {
+    background-color: #007bff; /* Color primario para el botón activo */
+    color: white;
+    border-color: #007bff;
+    font-weight: 600; /* Ligeramente más grueso cuando está activo */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Sombra sutil para el activo */
+}
+.filter-button:focus-visible { /* Estilo de foco para accesibilidad */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.4);
+}

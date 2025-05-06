@@ -1,0 +1,190 @@
+/* src/pages/estructuras/EstructuraDetalle.css */
+
+/* Considera definir una fuente base en tu CSS global para consistencia, ej:
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; // Un fondo muy sutil para toda la página
+    color: #333;
+}
+*/
+
+.estructura-detalle-container {
+    padding: 30px 35px; /* Un poco más de padding */
+    max-width: 950px;   /* Ligeramente más ancho si el contenido lo requiere */
+    margin: 30px auto;  /* Más margen superior/inferior */
+    background-color: #ffffff;
+    border-radius: 10px; /* Un radio de borde consistente */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Sombra más suave y difusa */
+    border: 1px solid #e9ecef; /* Borde sutil para definir el contenedor */
+}
+
+.estructura-detalle-container h1 {
+    font-size: 2em; /* Un poco más grande para el título principal */
+    color: #1a2533; /* Un azul/gris más oscuro y sobrio */
+    border-bottom: 3px solid #007bff; /* Borde acentuado más grueso */
+    padding-bottom: 15px;
+    margin-bottom: 30px; /* Más espacio después del título */
+    font-weight: 600; /* Peso semibold */
+}
+
+.detalle-seccion {
+    margin-bottom: 35px; /* Mayor separación entre secciones */
+    padding-bottom: 25px;
+    border-bottom: 1px solid #f0f0f0; /* Borde separador más claro */
+}
+.detalle-seccion:last-of-type { /* Usar :last-of-type para ser más específico */
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.detalle-seccion h2 {
+    font-size: 1.5em; /* Tamaño consistente para subtítulos */
+    color: #0056b3;   /* Azul para los subtítulos, relacionado con el acento del h1 */
+    margin-bottom: 20px; /* Más espacio debajo de subtítulos */
+    font-weight: 500;
+}
+
+.main-details p,
+.antecedente-item p {
+    margin-bottom: 10px; /* Espaciado consistente */
+    line-height: 1.7;    /* Mayor altura de línea para legibilidad */
+    font-size: 1em;      /* Tamaño de fuente base */
+    color: #454545;      /* Color de texto principal ligeramente más suave */
+}
+
+.main-details p strong,
+.antecedente-item p strong {
+    font-weight: 600;
+    color: #222; /* Color más oscuro para las etiquetas en negrita */
+    margin-right: 8px; /* Un poco más de espacio */
+}
+
+.main-details a, /* Estilo para links dentro de los detalles */
+.antecedente-item a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.main-details a:hover,
+.antecedente-item a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+
+.antecedentes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.antecedente-item {
+    background-color: #fdfdfd; /* Fondo casi blanco, muy sutil */
+    padding: 20px;
+    border-radius: 8px; /* Radio consistente */
+    margin-bottom: 20px;
+    border: 1px solid #e7e7e7; /* Borde más definido */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra sutil para cada item */
+    transition: box-shadow 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+.antecedente-item:hover {
+    /* transform: translateY(-2px); Sutil elevación al hacer hover */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.antecedente-item p:last-child {
+    margin-bottom: 0;
+}
+
+/* Botones con estilo mejorado */
+.button-back,
+.button-add-antecedente {
+    border: none;
+    padding: 12px 24px; /* Padding unificado y generoso */
+    border-radius: 6px; /* Radio de borde unificado */
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500; /* Peso de fuente medio */
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra inicial sutil */
+    text-transform: uppercase; /* Opcional: para un look más formal */
+    letter-spacing: 0.5px; /* Opcional: espaciado entre letras */
+}
+.button-back:hover,
+.button-add-antecedente:hover {
+    transform: translateY(-1px); /* Ligera elevación */
+    box-shadow: 0 3px 7px rgba(0,0,0,0.15); /* Sombra más pronunciada */
+}
+.button-back:active,
+.button-add-antecedente:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.button-back:focus-visible, /* Mejor visibilidad de foco */
+.button-add-antecedente:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+
+.button-back {
+    background-color: #6c757d; /* Gris secundario */
+    color: white;
+    margin-bottom: 25px; /* Más espacio */
+}
+.button-back:hover {
+    background-color: #5a6268;
+}
+
+.button-add-antecedente {
+    background-color: #007bff; /* Azul primario */
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px; /* Espacio si hay items de antecedentes arriba */
+}
+.button-add-antecedente:hover {
+    background-color: #0056b3;
+}
+
+
+/* Contenedores de estado (ya estaban bien, solo pequeños ajustes si es necesario) */
+.detalle-status-container {
+    display: flex;
+    flex-direction: column; /* Para alinear el botón de reintentar debajo del mensaje */
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    margin: 40px auto; /* Centrar y dar espacio */
+    border-radius: 8px;
+    font-size: 1.2em;
+    text-align: center;
+    max-width: 600px; /* Para que no sea demasiado ancho */
+    background-color: #f8f9fa; /* Fondo ligero para el contenedor de estado */
+}
+.detalle-status-container p {
+    margin: 0;
+    padding: 20px 25px;
+    border-radius: 6px;
+}
+.detalle-status-container.error p {
+    color: #721c24; /* Color de texto más oscuro para mejor contraste */
+    background-color: #f8d7da; /* Fondo rojo claro */
+    border: 1px solid #f5c6cb; /* Borde sutil */
+}
+.detalle-status-container button { /* Estilo para botón reintentar, si existe */
+    margin-top: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+.detalle-status-container button:hover {
+    background-color: #0056b3;
+}
