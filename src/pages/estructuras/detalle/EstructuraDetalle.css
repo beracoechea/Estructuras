@@ -1,12 +1,222 @@
-/* src/pages/estructuras/EstructuraDetalle.css */
+/* Añadir/Actualizar en EstructuraDetalle.css */
 
-/* Considera definir una fuente base en tu CSS global para consistencia, ej:
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5; // Un fondo muy sutil para toda la página
+.estructura-detalle-container {
+    padding: 25px;
+    max-width: 900px; /* Limitar ancho para mejor lectura */
+    margin: 20px auto; /* Centrar contenedor */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.button-back {
+    background: none;
+    border: 1px solid #ccc;
+    color: #555;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.2s, color 0.2s;
+}
+.button-back:hover {
+    background-color: #f0f0f0;
     color: #333;
 }
-*/
+
+
+.estructura-detalle-container h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.detalle-seccion {
+    margin-bottom: 35px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+.detalle-seccion h2 {
+    font-size: 1.4em;
+    color: #34495e;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.main-details p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    color: #555;
+}
+.main-details p strong {
+    color: #333;
+    min-width: 150px; /* Alineación visual de valores */
+    display: inline-block;
+}
+
+/* --- Estilos para Tarjetas de Antecedentes --- */
+.antecedentes-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre tarjetas */
+    margin-bottom: 20px; /* Espacio antes del botón añadir */
+}
+
+.antecedente-card {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    overflow: hidden; /* Importante para la animación de max-height */
+}
+
+.antecedente-summary {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: #f8f9fa; /* Fondo ligero para la cabecera */
+    transition: background-color 0.2s ease;
+}
+
+.antecedente-card:hover .antecedente-summary {
+    background-color: #eef1f3;
+}
+
+.antecedente-summary .summary-info {
+    display: flex;
+    gap: 20px; /* Espacio entre campos del resumen */
+    flex-wrap: wrap; /* Permitir que bajen en pantallas pequeñas */
+}
+
+.antecedente-summary .summary-field {
+    font-size: 0.95em;
+    color: #495057;
+}
+.antecedente-summary .summary-field strong {
+    color: #212529;
+    margin-right: 5px;
+}
+
+.antecedente-summary .expand-icon {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #6c757d;
+    transition: transform 0.3s ease;
+}
+.antecedente-card.expanded .expand-icon {
+    transform: rotate(45deg); /* Gira el '+' a 'x' o el '-' */
+}
+
+.antecedente-details {
+    max-height: 0; /* Colapsado por defecto */
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out, border-top 0.4s ease-out;
+    padding: 0 20px; /* Padding horizontal constante */
+    border-top: none; /* Sin borde superior cuando está colapsado */
+    background-color: #ffffff; /* Fondo blanco para detalles */
+}
+
+.antecedente-card.expanded .antecedente-details {
+    max-height: 1500px; /* Suficientemente grande para el contenido */
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: 1px solid #e9ecef; /* Línea separadora */
+    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, border-top 0.5s ease-in-out;
+}
+
+.antecedente-details p,
+.antecedente-details .text-area-display,
+.antecedente-details .actos-celebrados-section {
+    margin-bottom: 12px;
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: #555;
+}
+.antecedente-details strong {
+    color: #333;
+    margin-right: 5px;
+}
+.antecedente-details .text-area-display strong {
+     display: block; /* Label en línea separada */
+     margin-bottom: 5px;
+}
+
+.antecedente-details pre {
+    white-space: pre-wrap; /* Respeta saltos de línea y ajusta */
+    word-wrap: break-word;
+    background-color: #f8f9fa; /* Fondo ligero para el texto preformateado */
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Fuente monoespaciada */
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.actos-celebrados-section strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.actos-celebrados-section ul.actos-list {
+    list-style: disc;
+    margin-left: 20px;
+    padding-left: 15px;
+}
+.actos-celebrados-section ul.actos-list li {
+    margin-bottom: 5px;
+}
+
+.link-acceso {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+.link-acceso:hover {
+    text-decoration: underline;
+}
+
+.button-add-antecedente {
+    display: inline-block; /* Para que no ocupe todo el ancho */
+    margin-top: 10px; /* Espacio sobre el botón */
+    padding: 10px 18px;
+    background-color: #17a2b8; /* Azul info */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.button-add-antecedente:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+}
+
+/* Contenedor de Status/Error */
+.detalle-status-container {
+    padding: 20px;
+    text-align: center;
+    font-size: 1.1em;
+    color: #666;
+}
+.detalle-status-container.error p {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 15px 20px;
+    border-radius: 5px;
+    display: inline-block; /* Para que no ocupe todo el ancho */
+}
 
 .estructura-detalle-container {
     padding: 30px 35px; /* Un poco más de padding */

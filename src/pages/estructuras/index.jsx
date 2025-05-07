@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Banner.css';
-import { EstructuraConsulta } from './ConsultaEstructura'; // Ajusta la ruta si es necesario
-import { EstructuraEdicion} from './EdicionEstructura';   // Ajusta la ruta si es necesario
+import './Banner.css'; // Asegúrate que la ruta al CSS es correcta
+import { EstructuraConsulta } from './ConsultaEstructura'; 
+import { EstructuraEdicion } from './EdicionEstructura';   
+import { ExpedientesContent } from '../expedientes/ExpedientesContent'; // Asegúrate de que la ruta es correcta
+import { EstadosDeCuentaContent } from '../estadosCuenta/EstadosDeCuentaContent';
 
 export const Estructuras = () => {
     const [userInfo, setUserInfo] = useState(null);
-    const [currentMode, setCurrentMode] = useState('consulta'); // 'consulta' o 'edicion'
+    const [activeView, setActiveView] = useState('estructuras'); // Vista principal activa
+    const [currentMode, setCurrentMode] = useState('consulta'); // Sub-modo para estructuras
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,9 +31,23 @@ export const Estructuras = () => {
         }
     }, [navigate]);
 
+    // Cambia el MODO (consulta/edición) SOLO para la vista de estructuras
     const toggleMode = () => {
-        setCurrentMode(prevMode => (prevMode === 'consulta' ? 'edicion' : 'consulta'));
+        if (activeView === 'estructuras') {
+            setCurrentMode(prevMode => (prevMode === 'consulta' ? 'edicion' : 'consulta'));
+        }
     };
+
+    // Cambia la VISTA principal
+    const changeActiveView = (viewName) => {
+        setActiveView(viewName);
+        // Opcional: Si cambias a una vista que no sea estructuras,
+        // podrías resetear el currentMode a 'consulta' si lo deseas.
+        // if (viewName !== 'estructuras') {
+        //     setCurrentMode('consulta');
+        // }
+    };
+
 
     if (!userInfo) {
         return (
@@ -41,24 +58,70 @@ export const Estructuras = () => {
     }
 
     const photoURL = userInfo.userPhoto || 'https://via.placeholder.com/100?text=User';
+    // La clase del sidebar ahora depende del MODO (consulta/edición), no de la vista activa
     const sidebarModeClass = currentMode === 'edicion' ? 'sidebar-mode-edicion' : 'sidebar-mode-consulta';
     const buttonModeText = currentMode === 'consulta' ? 'Cambiar a Modo Edición' : 'Cambiar a Modo Consulta';
 
+    // Helper para renderizar el contenido principal
+    const renderMainContent = () => {
+        switch (activeView) {
+            case 'estructuras':
+                return currentMode === 'consulta'
+                    ? <EstructuraConsulta userInfo={userInfo} />
+                    : <EstructuraEdicion userInfo={userInfo} />;
+            case 'expedientes':
+                return <ExpedientesContent userInfo={userInfo} />;
+            case 'estados_cuenta':
+                return <EstadosDeCuentaContent userInfo={userInfo} />;
+            default:
+                // Vista por defecto o fallback si activeView es inválido
+                return <EstructuraConsulta userInfo={userInfo} />;
+        }
+    };
+
     return (
         <div className="estructuras-page-container">
+            {/* El sidebar ahora usa la clase de MODO, no de VISTA */}
             <aside className={`sidebar-user-info ${sidebarModeClass}`}>
                 <img src={photoURL} alt={userInfo.userName} className="user-photo" />
                 <h1>Bienvenido:</h1>
                 <h2>{userInfo.userName}</h2>
                 <p className="user-email">{userInfo.userEmail}</p>
 
-                <button className="mode-toggle-button" onClick={toggleMode}>
+                {/* Navegación Principal */}
+                <nav className="sidebar-nav">
+                    <button
+                        className={`nav-button ${activeView === 'estructuras' ? 'active' : ''}`}
+                        onClick={() => changeActiveView('estructuras')}
+                    >
+                        Estructuras
+                    </button>
+                    <button
+                        className={`nav-button ${activeView === 'expedientes' ? 'active' : ''}`}
+                        onClick={() => changeActiveView('expedientes')}
+                    >
+                        Expedientes
+                    </button>
+                    <button
+                        className={`nav-button ${activeView === 'estados_cuenta' ? 'active' : ''}`}
+                        onClick={() => changeActiveView('estados_cuenta')}
+                    >
+                        Estados de Cuenta
+                    </button>
+                </nav>
+
+                {/* Botón para cambiar Modo Consulta/Edición (solo para Estructuras) */}
+                 {/* Se deshabilita si la vista activa no es 'estructuras' */}
+                <button
+                    className="mode-toggle-button"
+                    onClick={toggleMode}
+                    disabled={activeView !== 'estructuras'}
+                    title={activeView !== 'estructuras' ? "Disponible sólo en la vista de Estructuras" : ""}
+                >
                     {buttonModeText}
                 </button>
 
-                <nav className="sidebar-nav">
-                    {/* Enlaces de navegación si los tienes */}
-                </nav>
+                 {/* Botón de Cerrar Sesión */}
                 <button
                     className="logout-button"
                     onClick={() => {
@@ -70,19 +133,17 @@ export const Estructuras = () => {
                 </button>
             </aside>
             <main className="main-content-estructuras">
-                {/* Texto informativo del modo actual, puedes mantenerlo o quitarlo */}
-                <div style={{ marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #eee' }}>
+                 {/* Indicador opcional de vista/modo actual */}
+                 <div style={{ marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #eee' }}>
                     <p style={{ fontStyle: 'italic', color: '#555' }}>
-                        Actualmente en: <strong>Modo {currentMode === 'consulta' ? 'Consulta' : 'Edición'}</strong>
-                    </p>
-                </div>
+                         {/* Mostrar vista activa y modo si aplica */}
+                        Vista: <strong>{activeView === 'estados_cuenta' ? 'Estados de Cuenta' : activeView.charAt(0).toUpperCase() + activeView.slice(1)}</strong>
+                        {activeView === 'estructuras' && ` / Modo: ${currentMode === 'consulta' ? 'Consulta' : 'Edición'}`}
+                     </p>
+                 </div>
 
-                {/* PASO 3: Renderizado condicional del contenido principal */}
-                {currentMode === 'consulta' ? (
-                    <EstructuraConsulta userInfo={userInfo} />
-                ) : (
-                    <EstructuraEdicion userInfo={userInfo} />
-                )}
+                {/* Renderizar el componente de contenido adecuado */}
+                {renderMainContent()}
             </main>
         </div>
     );

@@ -230,3 +230,216 @@
     from { transform: scale(0.95); opacity: 0.8; }
     to { transform: scale(1); opacity: 1; }
 }
+/* Añadir a Modal.css */
+
+/* Estilos para la sección de lista dinámica */
+.form-group-dynamic-list {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fcfcfc; /* Fondo ligeramente diferente */
+}
+
+.form-group-dynamic-list > label {
+    /* El label principal de la sección */
+    font-weight: bold;
+    color: #444;
+    display: block;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Contenedor de los items ya añadidos */
+.dynamic-list-items {
+    margin-bottom: 20px; /* Espacio antes del formulario de añadir */
+    max-height: 150px; /* Altura máxima antes de scroll */
+    overflow-y: auto; /* Scroll si hay muchos items */
+    padding-right: 5px; /* Espacio para el scrollbar */
+}
+
+/* Cada item en la lista */
+.dynamic-list-item {
+    display: flex;
+    justify-content: space-between; /* Pone el botón de quitar al final */
+    align-items: center;
+    background-color: #f0f4f8; /* Fondo azulado suave para item */
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.dynamic-list-item .item-text {
+    color: #333;
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    margin-right: 10px; /* Espacio antes del botón quitar */
+    word-break: break-word; /* Para textos largos */
+}
+.dynamic-list-item .item-text strong {
+    color: #1c4b78; /* Color distintivo para etiquetas */
+}
+
+
+/* Mensaje cuando no hay items */
+.no-items-message {
+    font-style: italic;
+    color: #888;
+    font-size: 0.9em;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Botón para quitar item */
+.button-remove-item {
+    background: none;
+    border: none;
+    color: #e74c3c; /* Rojo */
+    font-size: 1.4em;
+    line-height: 1;
+    padding: 0 5px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.button-remove-item:hover {
+    color: #c0392b; /* Rojo más oscuro */
+}
+
+/* Formulario para añadir nuevo item */
+.dynamic-list-add-form {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd; /* Separador visual */
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos bajen si no caben */
+    align-items: flex-end; /* Alinea los botones con la base de los inputs */
+    gap: 15px; /* Espacio entre elementos del formulario de añadir */
+}
+
+/* Estilo para agrupar label e input en línea */
+.form-group-inline {
+    display: flex;
+    flex-direction: column; /* Label arriba, input abajo */
+    flex: 1 1 200px; /* Permite crecer/encogerse, base de 200px */
+    min-width: 180px; /* Ancho mínimo */
+}
+.form-group-inline label {
+    margin-bottom: 5px; /* Menos margen que en form-group normal */
+    font-size: 0.85em;
+    font-weight: normal;
+    color: #666;
+}
+.form-group-inline input[type="text"] {
+     padding: 8px 10px; /* Input ligeramente más pequeño */
+     font-size: 0.95em;
+}
+
+/* Botón para añadir item */
+.button-add-item {
+    padding: 8px 15px;
+    background-color: #5cb85c; /* Verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    height: 38px; /* Para alinear aprox con inputs */
+    align-self: flex-end; /* Asegura alineación */
+    transition: background-color 0.2s ease;
+}
+.button-add-item:hover {
+    background-color: #4cae4c;
+}
+.button-add-item:disabled {
+    background-color: #a3d9a3;
+    cursor: not-allowed;
+}
+
+/* Ajuste específico para el modal de antecedentes si necesita más ancho */
+.modal-content.modal-antecedente {
+    max-width: 650px; /* Hacerlo un poco más ancho */
+}
+
+.antecedente-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed #eee; /* Separador sobre las acciones */
+    text-align: right; /* Alinear botones a la derecha */
+}
+
+/* Estilo para el botón de editar */
+.button-edit-antecedente {
+    padding: 8px 18px; /* Padding similar al de añadir */
+    background-color: #ffc107; /* Amarillo/Amber para editar */
+    color: #383d41; /* Texto oscuro para buen contraste */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-left: 10px; /* Espacio si hay otros botones */
+}
+.button-edit-antecedente:hover {
+    background-color: #e0a800; /* Amarillo más oscuro */
+    transform: translateY(-1px);
+}
+.button-edit-antecedente:active {
+     transform: translateY(0px);
+}
+
+/* --- ESTILOS MEJORADOS PARA INPUTS NUMÉRICOS --- */
+.form-group-inline-pair {
+    display: flex;
+    gap: 15px; /* Espacio entre los inputs */
+    margin-bottom: 22px; /* Igual que form-group normal */
+}
+
+.form-group-inline {
+    flex: 1; /* Ocupa espacio disponible */
+    min-width: 0; /* Permite que se ajuste correctamente */
+}
+
+.form-group-inline label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+    font-size: 0.95em;
+}
+
+.form-group-inline input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    height: 42px; /* Misma altura que otros inputs */
+}
+
+/* Ocultar flechas en Chrome, Safari, Edge */
+.form-group-inline input[type="number"]::-webkit-outer-spin-button,
+.form-group-inline input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Estados de focus consistentes */
+.form-group-inline input[type="number"]:focus {
+    outline: none;
+    border-color: #5D9CEC;
+    box-shadow: 0 0 0 3px rgba(93, 156, 236, 0.25);
+}
+
+/* Estados deshabilitados */
+.form-group-inline input[type="number"]:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}

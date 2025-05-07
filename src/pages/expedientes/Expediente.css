@@ -1,0 +1,142 @@
+/* src/pages/expedientes/Expedientes.css (o donde corresponda) */
+
+.expedientes-container {
+    padding: 20px;
+}
+
+.expedientes-container h1 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.8em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+.expedientes-container > p { /* El párrafo introductorio */
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.user-greeting {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+/* Contenedor para las tarjetas seleccionables */
+.estructura-selector-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Grid responsivo */
+    gap: 20px;
+}
+
+/* Estilo para cada tarjeta/botón de estructura */
+.estructura-selector-card {
+    background-color: #fff;
+    border: 1px solid #dce1e5;
+    border-radius: 8px;
+    padding: 20px 25px;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column; /* Para alinear texto y prompt */
+    justify-content: space-between; /* Empuja el prompt hacia abajo */
+    min-height: 100px; /* Altura mínima */
+}
+
+.estructura-selector-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    border-color: #adb5bd;
+}
+
+.estructura-selector-card .razon-social {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px; /* Espacio antes del prompt */
+    display: block; /* Asegurar que ocupe su línea */
+}
+
+.estructura-selector-card .ver-expedientes-prompt {
+    font-size: 0.85em;
+    color: #3498db; /* Azul para indicar acción */
+    align-self: flex-end; /* Alinea a la derecha */
+    font-weight: 500;
+}
+
+
+/* Contenedores de Status/Error/NoData (puedes reutilizar los de otras vistas) */
+.status-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #555;
+}
+.status-container.error p { /* Estilo consistente para errores */
+    color: #D8000C; background-color: #FFD2D2; padding: 15px 20px; border-radius: 5px;
+}
+.status-container.no-data p { /* Estilo consistente para "no data" */
+     color: #4F8A10; background-color: #DFF2BF; padding: 15px 20px; border-radius: 5px;
+}/* Añadir a Expedientes.css o un archivo nuevo */
+
+/* Contenedor de la lista de documentos */
+.documentos-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre items de documento */
+}
+
+/* Cada item en la lista de documentos */
+.documento-list-item {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px 20px;
+    display: grid; /* Usar grid para alinear columnas */
+    /* Definir columnas: Nombre, #, Fecha, Estatus, Link (ejemplo) */
+    grid-template-columns: 2fr 1fr 1fr 1.5fr auto;
+    gap: 15px; /* Espacio entre columnas */
+    align-items: center;
+    transition: background-color 0.2s ease;
+    cursor: default; /* O 'pointer' si quieres que toda la fila sea clickeable para editar/ver */
+}
+
+.documento-list-item:hover {
+    background-color: #f9f9f9; /* Ligero resaltado al pasar el mouse */
+}
+
+.documento-list-item span {
+    font-size: 0.9em;
+    color: #444;
+    overflow: hidden; /* Evitar que texto largo desborde */
+    white-space: nowrap;
+    text-overflow: ellipsis; /* Añadir ... si el texto es muy largo */
+}
+.documento-list-item .doc-nombre strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.documento-list-item .doc-link-list a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.85em;
+    border: 1px solid #007bff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.documento-list-item .doc-link-list a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* ... (Asegúrate de tener los estilos para .status-container, .expedientes-list-header, .button-add-new, .button-back) ... */

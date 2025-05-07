@@ -239,3 +239,83 @@
     font-size: 1.2em;
     color: #555; /* Color de texto para el loader */
 }
+
+.sidebar-nav {
+    margin-top: 25px; /* Espacio después de la info de usuario */
+    margin-bottom: 25px; /* Espacio antes del botón de modo */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre botones de navegación */
+}
+
+button.nav-button {
+    display: block;
+    width: 100%;
+    padding: 12px 18px;
+    background-color: transparent; /* Fondo base transparente */
+    border: 1px solid transparent; /* Para mantener el layout estable */
+    border-radius: 6px;
+    text-align: left;
+    font-size: 1em; /* Tamaño de texto para navegación */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* --- Colores de botones de navegación según el MODO del sidebar --- */
+
+/* Modo Consulta (Fondo Azul) */
+.sidebar-mode-consulta button.nav-button {
+    color: #e0e0e0; /* Texto claro */
+    border-color: rgba(255, 255, 255, 0.2); /* Borde muy sutil */
+}
+.sidebar-mode-consulta button.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Resaltado ligero */
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+.sidebar-mode-consulta button.nav-button.active {
+    background-color: #ffffff; /* Fondo blanco para activo */
+    color: #3A5A9C; /* Texto azul (color del sidebar) */
+    border-color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Modo Edición (Fondo Dorado) */
+.sidebar-mode-edicion button.nav-button {
+    color: #6B5800; /* Texto oscuro */
+    border-color: rgba(0, 0, 0, 0.1); /* Borde oscuro sutil */
+}
+ .sidebar-mode-edicion button.nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Resaltado oscuro ligero */
+    color: #403100;
+    border-color: rgba(0, 0, 0, 0.15);
+}
+.sidebar-mode-edicion button.nav-button.active {
+    background-color: #403100; /* Fondo marrón/dorado oscuro para activo */
+    color: #E6B800; /* Texto dorado (color del sidebar) */
+    border-color: #403100;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+/* Estilo para el botón de Modo Edición/Consulta DESHABILITADO */
+.mode-toggle-button:disabled {
+    opacity: 0.6; /* Hacerlo semi-transparente */
+    cursor: not-allowed; /* Cursor de no permitido */
+    background-color: #adb5bd !important; /* Gris claro (sobrescribir colores de modo) */
+    color: #6c757d !important;
+    border: 1px solid #adb5bd !important;
+    box-shadow: none; /* Quitar sombra */
+    transform: none; /* Quitar efecto hover/active */
+}
+.mode-toggle-button:disabled:hover {
+     /* Evitar cambio de color al pasar el mouse cuando está deshabilitado */
+    background-color: #adb5bd !important;
+    color: #6c757d !important;
+    transform: none;
+    box-shadow: none;
+}
