@@ -139,4 +139,59 @@
     color: #fff;
 }
 
-/* ... (Asegúrate de tener los estilos para .status-container, .expedientes-list-header, .button-add-new, .button-back) ... */
+/* Estilos para resaltar fechas de vencimiento */
+.antecedente-card.vencido,
+.vencimiento-info.vencido,
+p.vencido {
+    /* color: red; O un borde, o un fondo sutil */
+    border-left: 5px solid #d9534f; /* Rojo para vencido */
+}
+.vencimiento-info.vencido strong, p.vencido strong {
+    color: #a94442;
+}
+
+
+.antecedente-card.vence-hoy,
+.vencimiento-info.vence-hoy,
+p.vence-hoy {
+    /* color: orange; */
+    border-left: 5px solid #f0ad4e; /* Naranja para vence hoy */
+}
+.vencimiento-info.vence-hoy strong, p.vence-hoy strong {
+    color: #8a6d3b;
+}
+
+.antecedente-card.vence-pronto,
+.vencimiento-info.vence-pronto,
+p.vence-pronto {
+    /* color: darkgoldenrod; */
+    border-left: 5px solid #f0e68c; /* Amarillo claro/dorado para vence pronto */
+}
+.vencimiento-info.vence-pronto strong, p.vence-pronto strong {
+    color: #8a7424;
+}
+
+.vencimiento-info { /* Estilo para la fecha de vencimiento en el resumen */
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Ajustes para el botón de editar en la tarjeta (si es necesario) */
+.antecedente-actions {
+    margin-top: 10px;
+    text-align: right; /* O como prefieras alinearlo */
+}
+
+.button-edit-antecedente { /* O una clase más genérica como .button-edit-card */
+    /* tus estilos para el botón de editar */
+    padding: 6px 12px;
+    background-color: #5bc0de; /* Un color info */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.button-edit-antecedente:hover {
+    background-color: #31b0d5;
+}

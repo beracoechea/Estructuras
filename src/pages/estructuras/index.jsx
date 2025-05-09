@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import './Banner.css'; // Asegúrate que la ruta al CSS es correcta
 import { EstructuraConsulta } from './ConsultaEstructura'; 
 import { EstructuraEdicion } from './EdicionEstructura';   
-import { ExpedientesContent } from '../expedientes/ExpedientesContent'; // Asegúrate de que la ruta es correcta
-import { EstadosDeCuentaContent } from '../estadosCuenta/EstadosDeCuentaContent';
 
 export const Estructuras = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -41,11 +39,7 @@ export const Estructuras = () => {
     // Cambia la VISTA principal
     const changeActiveView = (viewName) => {
         setActiveView(viewName);
-        // Opcional: Si cambias a una vista que no sea estructuras,
-        // podrías resetear el currentMode a 'consulta' si lo deseas.
-        // if (viewName !== 'estructuras') {
-        //     setCurrentMode('consulta');
-        // }
+       
     };
 
 
@@ -69,10 +63,6 @@ export const Estructuras = () => {
                 return currentMode === 'consulta'
                     ? <EstructuraConsulta userInfo={userInfo} />
                     : <EstructuraEdicion userInfo={userInfo} />;
-            case 'expedientes':
-                return <ExpedientesContent userInfo={userInfo} />;
-            case 'estados_cuenta':
-                return <EstadosDeCuentaContent userInfo={userInfo} />;
             default:
                 // Vista por defecto o fallback si activeView es inválido
                 return <EstructuraConsulta userInfo={userInfo} />;
@@ -96,18 +86,7 @@ export const Estructuras = () => {
                     >
                         Estructuras
                     </button>
-                    <button
-                        className={`nav-button ${activeView === 'expedientes' ? 'active' : ''}`}
-                        onClick={() => changeActiveView('expedientes')}
-                    >
-                        Expedientes
-                    </button>
-                    <button
-                        className={`nav-button ${activeView === 'estados_cuenta' ? 'active' : ''}`}
-                        onClick={() => changeActiveView('estados_cuenta')}
-                    >
-                        Estados de Cuenta
-                    </button>
+        
                 </nav>
 
                 {/* Botón para cambiar Modo Consulta/Edición (solo para Estructuras) */}

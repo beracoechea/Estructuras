@@ -398,3 +398,128 @@
 .detalle-status-container button:hover {
     background-color: #0056b3;
 }
+/* Añadir a EstructuraDetalle.css */
+
+.subview-toggle-buttons {
+    display: flex;
+    justify-content: center; /* Centrar los botones */
+    gap: 10px; /* Espacio entre botones */
+    margin-top: 20px; /* Espacio después de Info General */
+    margin-bottom: 30px; /* Espacio antes del contenido alternable */
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee; /* Línea separadora */
+}
+
+.subview-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    color: #495057;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subview-button:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.subview-button.active {
+    background-color: #007bff; /* Azul Bootstrap primario */
+    color: white;
+    border-color: #007bff;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+/* Añadir a EstructuraDetalle.css o un CSS específico */
+
+
+
+.estados-cuenta-list-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Layout de tarjetas responsivo */
+    gap: 20px; /* Espacio entre tarjetas */
+    margin-top: 20px;
+}
+
+.estado-cuenta-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.ec-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ec-card-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.ec-status {
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+/* Ejemplo de colores de estatus */
+.ec-status-conciliado { background-color: #d4edda; color: #155724; }
+.ec-status-pendiente { background-color: #fff3cd; color: #856404; }
+.ec-status-revisado { background-color: #cce5ff; color: #004085; }
+.ec-status-default { background-color: #e9ecef; color: #495057; }
+
+
+.ec-card-body p {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+.ec-card-body p strong {
+    color: #333;
+}
+
+.ec-card-footer {
+    margin-top: auto; /* Empuja el pie de tarjeta hacia abajo */
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 0.8em;
+    color: #777;
+    text-align: right;
+}
+
+.text-area-display { /* Reutilizar si ya lo tienes */
+    margin-bottom: 8px;
+}
+.text-area-display strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #333;
+}
+.text-area-display pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 0.85em;
+    color: #444;
+    margin-top: 2px;
+}
