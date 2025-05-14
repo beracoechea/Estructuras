@@ -523,3 +523,30 @@
     color: #444;
     margin-top: 2px;
 }
+/* Añadir a tu archivo CSS */
+.button-prestamo {
+    background-color: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 8px;
+    transition: background-color 0.3s;
+}
+
+.button-prestamo:hover {
+    background-color: #3a5a80;
+}
+
+.button-prestamo:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.antecedente-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}

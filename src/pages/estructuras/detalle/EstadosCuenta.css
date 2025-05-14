@@ -1,0 +1,319 @@
+/* src/components/EstadosCuenta.css */
+.status-container {
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+.status-container.error {
+    color: red;
+    background-color: #ffe0e0;
+    border-color: #ffc0c0;
+}
+
+.main-container-estados-cuenta {
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.detalle-seccion {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.detalle-seccion h2 {
+    margin-top: 0;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.button-add-new {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.button-add-new:hover {
+    background-color: #0056b3;
+}
+
+.estados-cuenta-list-cards, .checks-mensuales-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.estado-cuenta-card, .check-mensual-item {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ec-card-header, .check-mensual-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaeaea;
+}
+.ec-card-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #333;
+}
+.ec-status {
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: white;
+    background-color: #6c757d; /* default */
+}
+/* Puedes añadir clases específicas para ec-status-conciliado, ec-status-pendiente etc. */
+
+.ec-card-body p {
+    margin: 8px 0;
+    font-size: 0.95em;
+    color: #555;
+}
+.ec-card-body strong {
+    color: #333;
+}
+.link-acceso {
+    color: #007bff;
+    text-decoration: none;
+}
+.link-acceso:hover {
+    text-decoration: underline;
+}
+.text-area-display {
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+.text-area-display pre {
+    background-color: #f0f0f0;
+    padding: 8px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    font-size: 0.95em;
+    color: #444;
+}
+
+.ec-card-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eaeaea;
+    font-size: 0.85em;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.button-edit-antecedente { /* O usa una clase más genérica como button-edit */
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+.button-edit-antecedente:hover {
+    background-color: #e0a800;
+}
+
+.form-group-inline { /* Para el selector de año */
+    display: flex;
+    align-items: center;
+}
+.input-ano-seguimiento { /* Input de año */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100px;
+}
+.check-mensual-header label {
+    cursor: pointer;
+}
+.comentario-link-textarea { /* Textarea para observaciones de checks */
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Para que padding no afecte el ancho total */
+    resize: vertical;
+    min-height: 40px;
+}
+.control-mensual-checks-view {
+  /* .detalle-seccion ya le da padding y borde general, podemos refinar si es necesario */
+  background-color: #f8f9fa; /* Un fondo muy sutil para la sección, si se desea */
+}
+
+.control-mensual__header {
+  display: flex;
+  flex-wrap: wrap; /* Para que en pantallas pequeñas los elementos puedan bajar */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px; /* Un poco más de espacio antes del grid de checks */
+  padding-bottom: 15px;
+  border-bottom: 1px solid #dee2e6; /* Un separador visual sutil */
+}
+
+.control-mensual__title {
+  margin: 0 0 10px 0; /* Margen inferior para cuando los elementos se apilan */
+  font-size: 1.5rem; /* Ajusta según tu jerarquía de títulos */
+  color: #343a40; /* Un color de título oscuro pero no negro puro */
+  font-weight: 600;
+}
+
+.control-mensual__year-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Margen para cuando los elementos se apilan */
+}
+
+.year-selector__label {
+  margin-right: 12px; /* Más espacio entre label e input */
+  font-weight: 500; /* Peso de fuente para la etiqueta */
+  color: #495057;
+  font-size: 1rem; /* Tamaño de fuente para la etiqueta */
+}
+
+.year-selector__input {
+  padding: 10px 14px; /* Padding más generoso */
+  border: 1px solid #ced4da;
+  border-radius: 6px; /* Bordes más redondeados */
+  font-size: 1rem;
+  width: 120px; /* Ancho específico, o 'auto' si prefieres */
+  color: #495057;
+  background-color: #fff;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.year-selector__input::-webkit-outer-spin-button,
+.year-selector__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.year-selector__input:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Sombra de foco estilo Bootstrap */
+}
+
+/* --- Mejoras para el Grid de Checks Mensuales (complementando tus estilos existentes) --- */
+
+.checks-mensuales-grid {
+  /* display: grid; ya lo tienes */
+  /* grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); un buen valor */
+  gap: 25px; /* Un poco más de espacio entre items */
+}
+
+.check-mensual-item {
+  /* border: 1px solid #e0e0e0; ya lo tienes */
+  padding: 20px; /* Más padding interno */
+  /* border-radius: 6px; ya lo tienes */
+  /* background-color: #f9f9f9; puedes cambiar a #fff si la sección tiene fondo gris */
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07); /* Sombra más pronunciada */
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.check-mensual-item:hover {
+  transform: translateY(-4px); /* Efecto sutil al pasar el mouse */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.check-mensual-header {
+  /* display: flex; align-items: center; ya lo tienes */
+  margin-bottom: 15px; /* Más espacio antes del textarea */
+  /* border-bottom: none; si no quieres la línea separadora interna */
+}
+
+.check-mensual-header input[type="checkbox"] {
+  width: 20px; /* Checkbox más grande */
+  height: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: #0d6efd; /* Color del tick del checkbox (navegadores modernos) */
+  /* Para un estilo más personalizado y cross-browser, se requeriría ocultar
+     el checkbox original y estilizar un pseudo-elemento en la etiqueta.
+     Pero accent-color es una buena mejora simple. */
+}
+.check-mensual-header input[type="checkbox"]:disabled {
+  accent-color: #adb5bd;
+  cursor: not-allowed;
+}
+
+
+.check-mensual-header label {
+  /* font-weight: bold; ya lo tienes */
+  font-size: 1.1rem; /* Un poco más grande la etiqueta del mes */
+  color: #212529;
+}
+
+.check-mensual-header small { /* Para el "Guardando..." */
+  margin-left: auto; /* Empujar a la derecha */
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.comentario-link-textarea { /* Textarea de observaciones */
+  /* width: 100%; ya lo tienes */
+  margin-top: 0; /* Ajustado por el margen inferior del header del item */
+  padding: 12px;
+  /* border: 1px solid #ddd; ya lo tienes */
+  border-color: #ced4da; /* Mismo color que el input de año */
+  /* border-radius: 4px; ya lo tienes */
+  border-radius: 6px; /* Consistente con el input de año */
+  min-height: 70px; /* Más altura mínima para observaciones */
+  font-size: 0.95rem;
+  color: #495057;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.comentario-link-textarea:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.comentario-link-textarea:disabled {
+    background-color: #e9ecef; /* Fondo grisáceo para deshabilitado */
+    cursor: not-allowed;
+}
+
+
+/* --- Responsividad para el encabezado de la sección de control --- */
+@media (max-width: 768px) { /* Podrías ajustar este breakpoint */
+  .control-mensual__header {
+    flex-direction: column; /* Apilar el título y el selector de año */
+    align-items: flex-start; /* Alinear a la izquierda */
+  }
+
+  .control-mensual__title {
+    margin-bottom: 15px; /* Espacio entre título y selector de año cuando están apilados */
+  }
+
+  .control-mensual__year-selector {
+    width: 100%; /* Ocupar todo el ancho disponible */
+  }
+
+  .year-selector__input {
+    width: 150px; /* Un ancho fijo o podrías usar flex-grow: 1; si quieres que se expanda */
+  }
+}

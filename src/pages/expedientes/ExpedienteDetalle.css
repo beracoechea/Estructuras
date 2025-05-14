@@ -1,0 +1,215 @@
+/* Contenedor principal */
+.expediente-detalle-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Botón de volver */
+.button-back {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #555;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.button-back:hover {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+}
+
+/* Títulos */
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+h2 {
+  color: #3498db;
+  margin: 25px 0 15px 0;
+  font-size: 1.3em;
+}
+
+/* Secciones de detalle */
+.detalle-seccion {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+.detalle-seccion p {
+  margin: 10px 0;
+}
+
+/* Estilos para la información de estructura */
+.estructura-info {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border-left: 4px solid #3498db;
+  margin-bottom: 20px;
+}
+
+.estructura-info a {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.estructura-info a:hover {
+  text-decoration: underline;
+}
+
+/* Texto con formato */
+.text-area-display pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  margin-top: 5px;
+}
+
+/* Enlaces */
+.link-acceso {
+  color: #2980b9;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-acceso:hover {
+  text-decoration: underline;
+}
+
+/* Metadata */
+.metadata {
+  background-color: #f8f9fa;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.metadata p {
+  margin: 5px 0;
+}
+
+/* Estados de contenedores */
+.status-container {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin: 20px;
+}
+
+.status-container.error {
+  color: #e74c3c;
+  background-color: #fdecea;
+}
+
+.status-container.no-data {
+  color: #7f8c8d;
+}
+
+/* Estilos para préstamos */
+.prestamo-item {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.prestamo-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.prestamo-info p {
+  margin: 5px 0;
+}
+
+.button-entregar {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  align-self: center;
+  margin-top: 10px;
+}
+
+.button-entregar:hover:not(:disabled) {
+  background-color: #219653;
+}
+
+.button-entregar:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.prestamos-list {
+  margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .expediente-detalle-container {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+  }
+  
+  .detalle-seccion {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .prestamo-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .button-entregar {
+    align-self: flex-start;
+  }
+}
+
+/* Clases para fechas según estado */
+.vencido {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.vence-hoy {
+  color: #f39c12;
+  font-weight: bold;
+}
+
+.vence-pronto {
+  color: #f39c12;
+}

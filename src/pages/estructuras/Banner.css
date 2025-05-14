@@ -319,3 +319,66 @@ button.nav-button {
     transform: none;
     box-shadow: none;
 }
+/* En Banner.css o tu archivo CSS principal */
+
+/* Estilos para el botón de Vencimientos con alerta */
+.nav-button.has-pending-vencimientos-button {
+  position: relative; /* Para el posicionamiento del punto si es absoluto */
+  color: #c9302c; /* Un rojo más oscuro para el texto del botón */
+  font-weight: bold; /* Hacer el texto del botón más notorio */
+  /* background-color: #f2dede; // Opcional: un fondo muy sutil para el botón mismo */
+}
+
+.vencimiento-dot {
+  display: inline-block;
+  width: 9px; /* Ligeramente más pequeño para que no sea tan invasivo */
+  height: 9px;
+  background-color: red;
+  border-radius: 50%;
+  margin-right: 7px; /* Espacio entre el punto y el texto */
+  vertical-align: middle; /* Alinear bien con el texto */
+}
+
+.pulsating-dot {
+  animation: pulseAnimation 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(255, 82, 82, 0);
+  }
+  100% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+  }
+}
+
+/* Estilos para la caja de alerta de texto */
+.vencimiento-alert-box {
+  display: flex;
+  align-items: center; /* Alinear ícono y texto verticalmente */
+  background-color: #f8d7da; /* Fondo rojo pálido */
+  color: #721c24; /* Texto rojo oscuro */
+  border: 1px solid #f5c6cb; /* Borde rojo más claro */
+  border-left: 5px solid #d9534f; /* Borde izquierdo más grueso y oscuro para énfasis */
+  border-radius: 4px;
+  padding: 10px 12px; /* Ajustar padding */
+  margin: 10px 15px; /* Margen para separarlo de otros elementos del sidebar */
+  font-size: 0.9em; /* Tamaño de fuente del texto de alerta */
+}
+
+.alert-icon {
+  font-size: 1.3em; /* Hacer el ícono un poco más grande */
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+  line-height: 1; /* Para mejor alineación vertical del emoji */
+}
+
+.vencimiento-alert-text { /* El <p> dentro del div */
+  margin: 0; /* Quitar margen por defecto del párrafo */
+  font-weight: 500; /* Ligeramente menos bold que el botón pero aún notorio */
+}

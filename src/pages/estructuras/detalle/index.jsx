@@ -1,7 +1,7 @@
 // src/pages/estructuras/detalle/EstructuraDetalle.jsx
+
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-// import { Timestamp } from 'firebase/firestore'; // Ya no es necesario aquí si solo se usa en hooks/modals
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 // Vistas de Subsección
 import { AntecedentesSocietariosView } from './AntecedentesSocietariosView';
@@ -11,46 +11,59 @@ import { EstadosDeCuentaView } from './EstadosDeCuentaView';
 // Modales
 import { AddAntecedenteModal } from '../../../modals/AddAntecedenteModal';
 import { EditAntecedenteModal } from '../../../modals/EditAntecedenteModal';
-import { AddDocumentoModal } from '../../../modals/AddDocument';
+// import { AddDocumentoModal } from '../../../modals/AddDocument'; // ELIMINADO: Ya no se añaden expedientes individualmente así
 import { AddEstadoCuentaModal } from '../../../modals/AddEstadoCuentaModal';
-import { EditEstadoCuentaModal } from '../../../modals/EditEstadoCuentaModal'; // <-- NUEVO MODAL
+import { EditEstadoCuentaModal } from '../../../modals/EditEstadoCuentaModal';
+import { AddPrestamoModal } from '../../../modals/AddPrestamoModal';
 
-// Hooks Personalizados (ajusta rutas según tu estructura)
+// Hooks Personalizados
 import { useEstructuraData } from '../../../hooks/useEstructuraData';
 import { useAntecedentesLogic } from '../../../hooks/useAntecedentesLogic';
-import { useExpedientesLogic } from '../../../hooks/useExpedientesLogic';
+import { useExpedientesLogic } from '../../../hooks/useExpedientesLogic'; // Asumimos que este hook está actualizado
 import { useEstadosCuentaLogic } from '../../../hooks/useEstadosCuentaLogic';
+import { useChecksLogic } from '../../../hooks/useChecksLogic';
+import { usePrestamosLogic } from '../../../hooks/usePrestamosLogic';
 
 import './EstructuraDetalle.css';
 
 const formatDate = (timestamp) => {
-    // ... (sin cambios)
     if (!timestamp) return 'N/A';
     let date;
-    if (timestamp.toDate) {
+    if (timestamp.toDate) { // Objeto Timestamp de Firebase
         date = timestamp.toDate();
-    } else if (typeof timestamp === 'string') {
-        const parts = timestamp.split('-');
-        if (parts.length === 3) {
+    } else if (timestamp.seconds && typeof timestamp.seconds === 'number') { // Objeto con seconds/nanoseconds
+        date = new Date(timestamp.seconds * 1000);
+    } else if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+        date = new Date(timestamp); // Intentar parsear strings o números directamente
+        // Si es un string YYYY-MM-DD, ajustar para UTC para evitar problemas de zona horaria
+        if (typeof timestamp === 'string' && timestamp.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            const parts = timestamp.split('-');
             date = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
-        } else {
-            date = new Date(timestamp);
         }
     } else if (timestamp instanceof Date) {
         date = timestamp;
     } else {
-        return 'Fecha inválida';
+        return 'Fecha inválida (tipo)';
     }
-    if (isNaN(date.getTime())) return 'Fecha inválida';
-    return date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+    if (isNaN(date.getTime())) return 'Fecha inválida (valor)';
+
+    // Usar UTC para la visualización para consistencia si las fechas se guardan como UTC medianoche
+    return date.toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: 'short', // 'long' para nombre completo, 'short' para abreviado
+        year: 'numeric',
+        timeZone: 'UTC' // Importante si las fechas son UTC y quieres evitar desplazamientos
+    });
 };
 
 
 export const EstructuraDetalle = () => {
     const { estructuraId } = useParams();
     const navigate = useNavigate();
-
-    const [activeSubView, setActiveSubView] = useState('antecedentes');
+    const location = useLocation();
+    const locationState = location.state;
+    const [activeSubView, setActiveSubView] = useState(locationState?.activeTab || 'antecedentes');
 
     const { estructura, loadingEstructura, errorEstructura, fetchEstructuraDetalle } = useEstructuraData(estructuraId);
 
@@ -61,27 +74,87 @@ export const EstructuraDetalle = () => {
         handleCloseEditAntecedenteModal, handleUpdateAntecedente, toggleExpandAntecedente,
     } = useAntecedentesLogic(estructura, fetchEstructuraDetalle);
 
+    // Destructuring actualizado para useExpedientesLogic
     const {
-        expedientes, loadingExpedientes, errorExpedientes, isAddExpedienteModalOpen,
-        fetchExpedientes, handleOpenAddExpedienteModal, handleCloseAddExpedienteModal,
-        handleSaveNuevoExpediente, handleUpdateExpedienteEnDetalle,
+        expedientes,
+        loadingExpedientes,
+        errorExpedientes,
+        isCreatingDefaults, // Nuevo estado para la carga de expedientes predeterminados
+        fetchExpedientes,
+        handleUpdateExpedienteEnDetalle, // Para editar los expedientes existentes
+        addDefaultExpedientesToEstructura // Nueva función para añadir los 26 expedientes
     } = useExpedientesLogic(estructuraId);
 
-    // Obtener las nuevas funciones y estados del hook de Estados de Cuenta
     const {
-        estadosCuenta, loadingEstadosCuenta, errorEstadosCuenta,
-        fetchEstadosDeCuenta,
-        isAddEstadoCuentaModalOpen,
-        handleOpenAddEstadoCuentaModal,
-        handleCloseAddEstadoCuentaModal,
-        handleSaveNuevoEstadoCuenta,
-        isEditEstadoCuentaModalOpen, // <-- NUEVO
-        estadoCuentaToEdit,         // <-- NUEVO
-        handleOpenEditEstadoCuentaModal, // <-- NUEVO
-        handleCloseEditEstadoCuentaModal, // <-- NUEVO
-        handleUpdateEstadoCuenta,     // <-- NUEVO
+        estadosCuenta, loadingEstadosCuenta, errorEstadosCuenta, fetchEstadosDeCuenta,
+        isAddEstadoCuentaModalOpen, handleOpenAddEstadoCuentaModal, handleCloseAddEstadoCuentaModal,
+        handleSaveNuevoEstadoCuenta, isEditEstadoCuentaModalOpen, estadoCuentaToEdit,
+        handleOpenEditEstadoCuentaModal, handleCloseEditEstadoCuentaModal, handleUpdateEstadoCuenta,
     } = useEstadosCuentaLogic(estructuraId);
 
+    const {
+        currentAnoChecks, checksDataForYear, loadingChecks, errorChecks,
+        handleAnoChange: handleAnoChecksChange,
+        handleUpdateMonthData: handleUpdateChecksData,
+        handleInitializeYear: handleInitializeYearlyChecks,
+    } = useChecksLogic(estructuraId);
+
+    const {
+        isAddPrestamoModalOpen, openAddPrestamoModal, closeAddPrestamoModal,
+        saveNuevoPrestamo,
+        isSavingPrestamo, // Corregido el posible typo de 'iseSavingPrestamo'
+    } = usePrestamosLogic();
+
+    const [expedienteParaPrestamo, setExpedienteParaPrestamo] = useState(null);
+
+    const handleOpenPrestamoModalForExpediente = (expedienteInfo) => {
+        setExpedienteParaPrestamo(expedienteInfo);
+        openAddPrestamoModal();
+    };
+
+    const handleClosePrestamoModal = () => {
+        closeAddPrestamoModal();
+        setExpedienteParaPrestamo(null);
+    };
+
+    const handleSavePrestamoWrapper = async (prestamoDataFromModal) => {
+        if (!expedienteParaPrestamo?.id || !estructuraId) {
+            console.error("Falta ID de expediente o estructura para guardar el préstamo.");
+            throw new Error("No se pudo determinar el expediente o la estructura para el préstamo.");
+        }
+        try {
+            await saveNuevoPrestamo(
+                prestamoDataFromModal,
+                estructuraId,
+                expedienteParaPrestamo.id
+            );
+            setExpedienteParaPrestamo(null);
+        } catch (error) {
+            console.error("Error al guardar préstamo desde EstructuraDetalle:", error);
+            throw error;
+        }
+    };
+
+    // Manejador para el botón de añadir expedientes predeterminados
+    const handleAddDefaultExpedientesClick = async () => {
+        if (!estructuraId) {
+            alert("Error: No se ha identificado la estructura actual.");
+            return;
+        }
+        const result = await addDefaultExpedientesToEstructura(estructuraId);
+        // Asegurarse de que result y result.success existan antes de acceder a result.message
+        if (result && result.success) {
+            alert(result.message || "Expedientes predeterminados procesados.");
+            await fetchExpedientes(); // Recargar la lista de expedientes
+        } else {
+            alert(result?.message || "Ocurrió un error inesperado al cargar los expedientes predeterminados.");
+        }
+    };
+
+    useEffect(() => {
+        // fetchEstructuraDetalle() es llamado por useEstructuraData internamente,
+        // no es necesario llamarlo aquí explícitamente si ese es el caso.
+    }, [estructuraId]);
 
     useEffect(() => {
         if (activeSubView === 'expedientes' && estructuraId) {
@@ -89,8 +162,8 @@ export const EstructuraDetalle = () => {
         } else if (activeSubView === 'estados_cuenta' && estructuraId) {
             fetchEstadosDeCuenta();
         }
+        // Añadir otras cargas de datos para subvistas si es necesario
     }, [activeSubView, estructuraId, fetchExpedientes, fetchEstadosDeCuenta]);
-
 
     if (loadingEstructura) return <div className="detalle-status-container"><p>Cargando estructura...</p></div>;
     if (errorEstructura) return <div className="detalle-status-container error"><p>{errorEstructura}</p></div>;
@@ -98,7 +171,6 @@ export const EstructuraDetalle = () => {
 
     return (
         <div className="estructura-detalle-container">
-            {/* ... (Botón Volver y Header sin cambios) ... */}
             <button onClick={() => navigate(-1)} className="button-back">&larr; Volver</button>
             <h1>{estructura.RazonSocial || "Detalle de Estructura"}</h1>
 
@@ -112,7 +184,7 @@ export const EstructuraDetalle = () => {
             </div>
 
             <div className="subview-toggle-buttons">
-                 <button
+                <button
                     className={`subview-button ${activeSubView === 'antecedentes' ? 'active' : ''}`}
                     onClick={() => setActiveSubView('antecedentes')}
                 >
@@ -128,10 +200,9 @@ export const EstructuraDetalle = () => {
                     className={`subview-button ${activeSubView === 'estados_cuenta' ? 'active' : ''}`}
                     onClick={() => setActiveSubView('estados_cuenta')}
                 >
-                    Estados de Cuenta
+                    Cuentas Bancarias y Control
                 </button>
             </div>
-
 
             {activeSubView === 'antecedentes' && (
                 <AntecedentesSocietariosView
@@ -139,32 +210,53 @@ export const EstructuraDetalle = () => {
                     expandedIndex={expandedAntecedenteIndex}
                     onToggleExpand={toggleExpandAntecedente}
                     onOpenAddModal={handleOpenAddAntecedenteModal}
-                    onOpenEditModal={handleOpenEditAntecedenteModal} // Asegúrate que esta se llame en AntecedentesSocietariosView
+                    onOpenEditModal={handleOpenEditAntecedenteModal}
                     formatDate={formatDate}
                 />
             )}
+
             {activeSubView === 'expedientes' && (
-                <ExpedientesAsociadosView
-                    estructuraId={estructuraId}
-                    estructuraNombre={estructura?.RazonSocial || `Estructura ${estructuraId}`}
-                    expedientes={expedientes}
-                    loading={loadingExpedientes}
-                    error={errorExpedientes}
-                    onOpenAddModal={handleOpenAddExpedienteModal}
-                    onUpdateExpediente={handleUpdateExpedienteEnDetalle}
-                    formatDate={formatDate}
-                />
+                <>
+                    <div style={{ margin: "20px 0", textAlign: "right" }}>
+                        <button
+                            onClick={handleAddDefaultExpedientesClick}
+                            disabled={isCreatingDefaults || loadingExpedientes}
+                            className="button-prestamo" // Usa tu clase de botón primario o una adecuada
+                        >
+                            {isCreatingDefaults ? "Cargando Predeterminados..." : "Cargar Expedientes Predeterminados"}
+                        </button>
+                    </div>
+                    <ExpedientesAsociadosView
+                        estructuraId={estructuraId}
+                        estructuraNombre={estructura?.RazonSocial || `Estructura ${estructuraId}`}
+                        expedientes={expedientes}
+                        loading={loadingExpedientes || isCreatingDefaults} // Combinar estados de carga
+                        error={errorExpedientes}
+                        // onOpenAddModal prop ya no se pasa porque se eliminó la funcionalidad de añadir expedientes individualmente
+                        onUpdateExpediente={handleUpdateExpedienteEnDetalle}
+                        formatDate={formatDate}
+                        onOpenPrestamoModal={handleOpenPrestamoModalForExpediente}
+                        highlightedExpedienteId={locationState?.highlightExpediente}
+                    />
+                </>
             )}
+
             {activeSubView === 'estados_cuenta' && (
                 <EstadosDeCuentaView
-                    estructuraId={estructuraId}
-                    estructuraNombre={estructura?.RazonSocial || `Estructura ${estructuraId}`}
                     estadosCuenta={estadosCuenta}
                     loading={loadingEstadosCuenta}
                     error={errorEstadosCuenta}
                     formatDate={formatDate}
                     onOpenAddModal={handleOpenAddEstadoCuentaModal}
-                    onOpenEditModal={handleOpenEditEstadoCuentaModal} // <-- PASAR NUEVA PROP
+                    onOpenEditModal={handleOpenEditEstadoCuentaModal}
+                    estructuraId={estructuraId}
+                    initialAnoChecks={currentAnoChecks}
+                    checksDataForYear={checksDataForYear}
+                    loadingChecks={loadingChecks}
+                    errorChecks={errorChecks}
+                    onAnoChecksChange={handleAnoChecksChange}
+                    onUpdateChecksData={handleUpdateChecksData}
+                    onInitializeYearlyChecks={handleInitializeYearlyChecks}
                 />
             )}
 
@@ -180,12 +272,10 @@ export const EstructuraDetalle = () => {
                 onUpdate={handleUpdateAntecedente}
                 initialData={antecedenteToEdit}
             />
-            <AddDocumentoModal // Para Expedientes
-                isOpen={isAddExpedienteModalOpen}
-                onClose={handleCloseAddExpedienteModal}
-                onSave={handleSaveNuevoExpediente}
-                estructuraId={estructuraId}
-            />
+            {/* AddDocumentoModal ya no es necesario aquí si los expedientes
+                solo se cargan mediante el botón de "Cargar Expedientes Predeterminados"
+                y luego se editan.
+            */}
             <AddEstadoCuentaModal
                 isOpen={isAddEstadoCuentaModalOpen}
                 onClose={handleCloseAddEstadoCuentaModal}
@@ -196,7 +286,14 @@ export const EstructuraDetalle = () => {
                 isOpen={isEditEstadoCuentaModalOpen}
                 onClose={handleCloseEditEstadoCuentaModal}
                 onUpdate={handleUpdateEstadoCuenta}
-                initialData={estadoCuentaToEdit} // estadoCuentaToEdit ya tiene la data y el id
+                initialData={estadoCuentaToEdit}
+            />
+            <AddPrestamoModal
+                isOpen={isAddPrestamoModalOpen}
+                onClose={handleClosePrestamoModal}
+                onSavePrestamo={handleSavePrestamoWrapper}
+                expedienteId={expedienteParaPrestamo?.id ?? ''}
+                expedienteNombre={expedienteParaPrestamo?.nombre ?? 'Expediente'}
             />
         </div>
     );

@@ -1,0 +1,141 @@
+/* src/components/vencimientos/VencimientosView.css */
+.vencimientos-view-container {
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.vencimientos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.vencimientos-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.button-refresh {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.button-refresh:hover {
+  background-color: #0056b3;
+}
+
+.button-refresh:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.status-container {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+}
+.status-container.error {
+  color: red;
+}
+
+.no-expedientes-general {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+  margin-top: 30px;
+}
+
+.vencimiento-category {
+  margin-bottom: 30px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+}
+
+.vencimiento-category h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #555;
+}
+
+.expediente-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.expediente-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.expediente-item:last-child {
+  border-bottom: none;
+}
+
+.expediente-item:hover {
+  background-color: #e9efff;
+}
+
+.expediente-nombre {
+  font-weight: bold;
+  color: #333;
+  flex-basis: 40%; /* Ajusta según necesites */
+}
+
+.estructura-nombre {
+  color: #666;
+  font-size: 0.9em;
+  flex-basis: 30%; /* Ajusta según necesites */
+  margin-left: 10px;
+}
+
+.fecha-vencimiento {
+  font-weight: 500;
+  text-align: right;
+  flex-basis: 30%; /* Ajusta según necesites */
+}
+
+.categoria-vencidos .fecha-vencimiento {
+  color: #d9534f; /* Rojo */
+}
+.categoria-vencidos .expediente-item {
+  border-left: 5px solid #d9534f;
+}
+
+.categoria-hoy .fecha-vencimiento {
+  color: #f0ad4e; /* Naranja */
+}
+.categoria-hoy .expediente-item {
+  border-left: 5px solid #f0ad4e;
+}
+
+.categoria-proximos7 .fecha-vencimiento,
+.categoria-proximos30 .fecha-vencimiento {
+  color: #5bc0de; /* Azul claro */
+}
+.categoria-proximos7 .expediente-item,
+.categoria-proximos30 .expediente-item {
+  border-left: 5px solid #5bc0de;
+}
+
+.no-expedientes {
+  font-style: italic;
+  color: #888;
+}

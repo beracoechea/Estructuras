@@ -1,14 +1,65 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Banner.css'; // Asegúrate que la ruta al CSS es correcta
-import { EstructuraConsulta } from './ConsultaEstructura'; 
-import { EstructuraEdicion } from './EdicionEstructura';   
+import { EstructuraConsulta } from './ConsultaEstructura';
+import { EstructuraEdicion } from './EdicionEstructura';
+import { PrestamosView } from '../prestamos/index';
+import { VencimientosView } from '../vencimientos'; // Asegúrate de importar tu componente real
+
+// Importaciones de Firebase para la función de chequeo
+import { firestore } from '../../config/firebase-config'; // Ajusta la ruta
+import { collection, getDocs, Timestamp } from 'firebase/firestore';
+
+const ESTRUCTURA_EXPEDIENTES_COLLECTION = "EstructuraExpedientes";
+
+// (Función checkForPendingVencimientos como la definimos antes)
+const checkForPendingVencimientos = async () => {
+    const hoy = new Date(); // Miércoles, 14 de mayo de 2025
+    hoy.setHours(0, 0, 0, 0);
+    const LIMITE_DIAS_PROXIMOS = 30;
+
+    try {
+        const estructuraExpedientesCollectionRef = collection(firestore, ESTRUCTURA_EXPEDIENTES_COLLECTION);
+        const estructuraExpedientesSnap = await getDocs(estructuraExpedientesCollectionRef);
+
+        if (estructuraExpedientesSnap.empty) {
+            return false;
+        }
+
+        for (const docSnap of estructuraExpedientesSnap.docs) {
+            const dataEstructuraExpedientes = docSnap.data();
+            const lista = dataEstructuraExpedientes.listaExpedientes || [];
+
+            for (const exp of lista) {
+                if (exp.fechaVencimiento && exp.fechaVencimiento.toDate) {
+                    const fechaVenc = exp.fechaVencimiento.toDate();
+                    fechaVenc.setHours(0, 0, 0, 0);
+                    const diffTime = fechaVenc.getTime() - hoy.getTime();
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays <= LIMITE_DIAS_PROXIMOS) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    } catch (err) {
+        console.error("Error al chequear vencimientos pendientes:", err);
+        return false;
+    }
+};
+
 
 export const Estructuras = () => {
     const [userInfo, setUserInfo] = useState(null);
-    const [activeView, setActiveView] = useState('estructuras'); // Vista principal activa
-    const [currentMode, setCurrentMode] = useState('consulta'); // Sub-modo para estructuras
+    const [activeView, setActiveView] = useState('estructuras');
+    const [currentMode, setCurrentMode] = useState('consulta');
     const navigate = useNavigate();
+    const [hasVencimientosPendientes, setHasVencimientosPendientes] = useState(false);
+    const [loadingVencimientoCheck, setLoadingVencimientoCheck] = useState(true);
+
+    // Usamos useCallback para la función checkForPendingVencimientos
+    const memoizedCheckForPendingVencimientos = useCallback(checkForPendingVencimientos, []);
 
     useEffect(() => {
         const storedAuthInfo = localStorage.getItem("auth");
@@ -29,19 +80,28 @@ export const Estructuras = () => {
         }
     }, [navigate]);
 
-    // Cambia el MODO (consulta/edición) SOLO para la vista de estructuras
+    useEffect(() => {
+        if (userInfo) {
+            setLoadingVencimientoCheck(true);
+            memoizedCheckForPendingVencimientos().then(hasPendientes => {
+                setHasVencimientosPendientes(hasPendientes);
+                setLoadingVencimientoCheck(false);
+            }).catch(() => {
+                setHasVencimientosPendientes(false);
+                setLoadingVencimientoCheck(false);
+            });
+        }
+    }, [userInfo, memoizedCheckForPendingVencimientos]);
+
     const toggleMode = () => {
         if (activeView === 'estructuras') {
             setCurrentMode(prevMode => (prevMode === 'consulta' ? 'edicion' : 'consulta'));
         }
     };
 
-    // Cambia la VISTA principal
     const changeActiveView = (viewName) => {
         setActiveView(viewName);
-       
     };
-
 
     if (!userInfo) {
         return (
@@ -52,33 +112,34 @@ export const Estructuras = () => {
     }
 
     const photoURL = userInfo.userPhoto || 'https://via.placeholder.com/100?text=User';
-    // La clase del sidebar ahora depende del MODO (consulta/edición), no de la vista activa
-    const sidebarModeClass = currentMode === 'edicion' ? 'sidebar-mode-edicion' : 'sidebar-mode-consulta';
+    const sidebarModeClass = currentMode === 'edicion' && activeView === 'estructuras' ? 'sidebar-mode-edicion' : 'sidebar-mode-consulta';
     const buttonModeText = currentMode === 'consulta' ? 'Cambiar a Modo Edición' : 'Cambiar a Modo Consulta';
 
-    // Helper para renderizar el contenido principal
     const renderMainContent = () => {
         switch (activeView) {
             case 'estructuras':
                 return currentMode === 'consulta'
                     ? <EstructuraConsulta userInfo={userInfo} />
                     : <EstructuraEdicion userInfo={userInfo} />;
+            case 'prestamos':
+                return <PrestamosView userInfo={userInfo} />;
+            case 'vencimientos':
+                return <VencimientosView userInfo={userInfo} />;
             default:
-                // Vista por defecto o fallback si activeView es inválido
+                setActiveView('estructuras');
+                setCurrentMode('consulta');
                 return <EstructuraConsulta userInfo={userInfo} />;
         }
     };
 
     return (
         <div className="estructuras-page-container">
-            {/* El sidebar ahora usa la clase de MODO, no de VISTA */}
             <aside className={`sidebar-user-info ${sidebarModeClass}`}>
                 <img src={photoURL} alt={userInfo.userName} className="user-photo" />
                 <h1>Bienvenido:</h1>
                 <h2>{userInfo.userName}</h2>
                 <p className="user-email">{userInfo.userEmail}</p>
 
-                {/* Navegación Principal */}
                 <nav className="sidebar-nav">
                     <button
                         className={`nav-button ${activeView === 'estructuras' ? 'active' : ''}`}
@@ -86,11 +147,30 @@ export const Estructuras = () => {
                     >
                         Estructuras
                     </button>
-        
+                    <button
+                        className={`nav-button ${activeView === 'prestamos' ? 'active' : ''}`}
+                        onClick={() => changeActiveView('prestamos')}
+                    >
+                        Expedientes en Préstamo
+                    </button>
+                    <button
+                        className={`nav-button ${activeView === 'vencimientos' ? 'active' : ''} ${hasVencimientosPendientes && !loadingVencimientoCheck ? 'has-pending-vencimientos-button' : ''}`}
+                        onClick={() => changeActiveView('vencimientos')}
+                    >
+                        {hasVencimientosPendientes && !loadingVencimientoCheck && <span className="vencimiento-dot pulsating-dot"></span>}
+                        Próximos Vencimientos
+                    </button>
                 </nav>
 
-                {/* Botón para cambiar Modo Consulta/Edición (solo para Estructuras) */}
-                 {/* Se deshabilita si la vista activa no es 'estructuras' */}
+                {hasVencimientosPendientes && !loadingVencimientoCheck && (
+                    <div className="vencimiento-alert-box"> {/* Cambiado a div para mejor estilizado */}
+                        <span className="alert-icon">⚠️</span>
+                        <p className="vencimiento-alert-text">
+                            ¡Atención! Hay vencimientos por revisar.
+                        </p>
+                    </div>
+                )}
+
                 <button
                     className="mode-toggle-button"
                     onClick={toggleMode}
@@ -100,7 +180,6 @@ export const Estructuras = () => {
                     {buttonModeText}
                 </button>
 
-                 {/* Botón de Cerrar Sesión */}
                 <button
                     className="logout-button"
                     onClick={() => {
@@ -112,16 +191,16 @@ export const Estructuras = () => {
                 </button>
             </aside>
             <main className="main-content-estructuras">
-                 {/* Indicador opcional de vista/modo actual */}
-                 <div style={{ marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #eee' }}>
+                <div style={{ marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #eee' }}>
                     <p style={{ fontStyle: 'italic', color: '#555' }}>
-                         {/* Mostrar vista activa y modo si aplica */}
-                        Vista: <strong>{activeView === 'estados_cuenta' ? 'Estados de Cuenta' : activeView.charAt(0).toUpperCase() + activeView.slice(1)}</strong>
+                        Vista: <strong>
+                            {activeView === 'estructuras' && 'Estructuras'}
+                            {activeView === 'prestamos' && 'Expedientes en Préstamo'}
+                            {activeView === 'vencimientos' && 'Próximos Vencimientos'}
+                        </strong>
                         {activeView === 'estructuras' && ` / Modo: ${currentMode === 'consulta' ? 'Consulta' : 'Edición'}`}
-                     </p>
-                 </div>
-
-                {/* Renderizar el componente de contenido adecuado */}
+                    </p>
+                </div>
                 {renderMainContent()}
             </main>
         </div>

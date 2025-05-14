@@ -12,11 +12,6 @@ export const Auth = () => {
 
   const signInWithGoogle = async () => {
     try {
-      // Agregar el parámetro prompt al proveedor
-      provider.setCustomParameters({
-        prompt: 'select_account'
-      });
-
       const results = await signInWithPopup(auth, provider);
       const email = results.user.email;
 
@@ -29,7 +24,7 @@ export const Auth = () => {
           isAuth: true,
         };
         localStorage.setItem("auth", JSON.stringify(authInfo));
-        navigate("/extructuras");
+        navigate("/estructuras");
       } else {
         console.warn(`Correo electrónico no autorizado: ${email}`);
         setUnauthorized(true);
