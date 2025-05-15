@@ -38,4 +38,38 @@
 .prestamo-card-body p strong { color: #333; }
 .prestamo-card-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0; font-size: 0.8em; color: #777; text-align: right;}
 
-/* Reutilizar status-container, button-back si es necesario */
+/* En Prestamos.css */
+.prestamo-item-card {
+  /* ... tus estilos existentes ... */
+  /* Si antes era clickable y tenía :hover para indicar eso, puedes quitar esos estilos específicos */
+}
+
+.prestamo-card-footer {
+  /* ... tus estilos existentes ... */
+  display: flex; /* Para alinear el texto de 'Registrado' y el botón */
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.button-devolver {
+  padding: 6px 12px;
+  background-color: #5cb85c; /* Verde para acción positiva */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
+}
+
+.button-devolver:hover {
+  background-color: #4cae4c;
+}
+
+.button-devolver:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
