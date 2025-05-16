@@ -6,39 +6,34 @@ import { EstructuraEdicion } from './EdicionEstructura';
 import { PrestamosView } from '../prestamos/index';
 import { VencimientosView } from '../vencimientos'; // Asegúrate de importar tu componente real
 
-// Importaciones de Firebase para la función de chequeo
+// Importaciones de Firebase para la función de chequeo de vencimientos pendientes
 import { firestore } from '../../config/firebase-config'; // Ajusta la ruta
-import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, Timestamp } from 'firebase/firestore'; // Timestamp ya estaba en tu archivo de EstructuraDetalle
 
-const ESTRUCTURA_EXPEDIENTES_COLLECTION = "EstructuraExpedientes";
+// Cuando desarrolles DashboardGeneralView, lo importarás así:
+import { DashboardGeneralView } from '../estructuras/graficos/DashboardGeneralView';
 
-// (Función checkForPendingVencimientos como la definimos antes)
+const ESTRUCTURA_EXPEDIENTES_COLLECTION = "EstructuraExpedientes"; // Usado en checkForPendingVencimientos
+
+// Función checkForPendingVencimientos (se mantiene como la tenías)
 const checkForPendingVencimientos = async () => {
-    const hoy = new Date(); // Miércoles, 14 de mayo de 2025
+    const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const LIMITE_DIAS_PROXIMOS = 30;
-
     try {
         const estructuraExpedientesCollectionRef = collection(firestore, ESTRUCTURA_EXPEDIENTES_COLLECTION);
         const estructuraExpedientesSnap = await getDocs(estructuraExpedientesCollectionRef);
-
-        if (estructuraExpedientesSnap.empty) {
-            return false;
-        }
-
+        if (estructuraExpedientesSnap.empty) return false;
         for (const docSnap of estructuraExpedientesSnap.docs) {
             const dataEstructuraExpedientes = docSnap.data();
             const lista = dataEstructuraExpedientes.listaExpedientes || [];
-
             for (const exp of lista) {
                 if (exp.fechaVencimiento && exp.fechaVencimiento.toDate) {
                     const fechaVenc = exp.fechaVencimiento.toDate();
                     fechaVenc.setHours(0, 0, 0, 0);
                     const diffTime = fechaVenc.getTime() - hoy.getTime();
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    if (diffDays <= LIMITE_DIAS_PROXIMOS) {
-                        return true;
-                    }
+                    if (diffDays <= LIMITE_DIAS_PROXIMOS) return true;
                 }
             }
         }
@@ -49,16 +44,26 @@ const checkForPendingVencimientos = async () => {
     }
 };
 
+// --- Marcador de posición para DashboardGeneralView ---
+// Deberás crear este componente en su propio archivo, ej: src/pages/dashboard/DashboardGeneralView.jsx
+const DashboardGeneralViewPlaceholder = ({ userInfo }) => {
+    // Este componente obtendrá y procesará datos de TODOS los expedientes mensuales
+    // de TODAS las estructuras para los 6 tipos específicos.
+    return (
+        <DashboardGeneralView/>
+    );
+};
+// --- Fin del marcador de posición ---
 
 export const Estructuras = () => {
     const [userInfo, setUserInfo] = useState(null);
+    // Añadir 'dashboard_general' a las vistas posibles
     const [activeView, setActiveView] = useState('estructuras');
     const [currentMode, setCurrentMode] = useState('consulta');
     const navigate = useNavigate();
     const [hasVencimientosPendientes, setHasVencimientosPendientes] = useState(false);
     const [loadingVencimientoCheck, setLoadingVencimientoCheck] = useState(true);
 
-    // Usamos useCallback para la función checkForPendingVencimientos
     const memoizedCheckForPendingVencimientos = useCallback(checkForPendingVencimientos, []);
 
     useEffect(() => {
@@ -101,6 +106,10 @@ export const Estructuras = () => {
 
     const changeActiveView = (viewName) => {
         setActiveView(viewName);
+        // Si se cambia a una vista que no es 'estructuras' y estaba en modo edición, volver a consulta
+        if (viewName !== 'estructuras' && currentMode === 'edicion') {
+            setCurrentMode('consulta');
+        }
     };
 
     if (!userInfo) {
@@ -112,7 +121,8 @@ export const Estructuras = () => {
     }
 
     const photoURL = userInfo.userPhoto || 'https://via.placeholder.com/100?text=User';
-    const sidebarModeClass = currentMode === 'edicion' && activeView === 'estructuras' ? 'sidebar-mode-edicion' : 'sidebar-mode-consulta';
+    const sidebarModeClass = activeView === 'estructuras' && currentMode === 'edicion' ?
+        'sidebar-mode-edicion' : 'sidebar-mode-consulta';
     const buttonModeText = currentMode === 'consulta' ? 'Cambiar a Modo Edición' : 'Cambiar a Modo Consulta';
 
     const renderMainContent = () => {
@@ -125,8 +135,10 @@ export const Estructuras = () => {
                 return <PrestamosView userInfo={userInfo} />;
             case 'vencimientos':
                 return <VencimientosView userInfo={userInfo} />;
+            case 'dashboard_general': // <-- NUEVO CASO PARA EL DASHBOARD GENERAL
+                return <DashboardGeneralViewPlaceholder userInfo={userInfo} />;
             default:
-                setActiveView('estructuras');
+                setActiveView('estructuras'); // Fallback a una vista conocida
                 setCurrentMode('consulta');
                 return <EstructuraConsulta userInfo={userInfo} />;
         }
@@ -147,6 +159,13 @@ export const Estructuras = () => {
                     >
                         Estructuras
                     </button>
+                    {/* NUEVO BOTÓN PARA DASHBOARD GENERAL */}
+                    <button
+                        className={`nav-button ${activeView === 'dashboard_general' ? 'active' : ''}`}
+                        onClick={() => changeActiveView('dashboard_general')}
+                    >
+                        Dashboard General
+                    </button>
                     <button
                         className={`nav-button ${activeView === 'prestamos' ? 'active' : ''}`}
                         onClick={() => changeActiveView('prestamos')}
@@ -163,7 +182,7 @@ export const Estructuras = () => {
                 </nav>
 
                 {hasVencimientosPendientes && !loadingVencimientoCheck && (
-                    <div className="vencimiento-alert-box"> {/* Cambiado a div para mejor estilizado */}
+                    <div className="vencimiento-alert-box">
                         <span className="alert-icon">⚠️</span>
                         <p className="vencimiento-alert-text">
                             ¡Atención! Hay vencimientos por revisar.
@@ -197,6 +216,7 @@ export const Estructuras = () => {
                             {activeView === 'estructuras' && 'Estructuras'}
                             {activeView === 'prestamos' && 'Expedientes en Préstamo'}
                             {activeView === 'vencimientos' && 'Próximos Vencimientos'}
+                            {activeView === 'dashboard_general' && 'Dashboard General'} {/* <-- ETIQUETA PARA LA NUEVA VISTA */}
                         </strong>
                         {activeView === 'estructuras' && ` / Modo: ${currentMode === 'consulta' ? 'Consulta' : 'Edición'}`}
                     </p>
