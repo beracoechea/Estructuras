@@ -92,7 +92,7 @@ export const DashboardEstructuraView = ({
 
             {/* SECCIÓN PARA ESTATUS DE EXPEDIENTES MENSUALES */}
             <div className="dashboard-section">
-                <h3>Distribución de Estatus (Exp. Mensuales Clave)</h3>
+                <h3>Estatus de los expedientes mensuales</h3>
                 {noHayDatosMensuales ? (
                      <p className="no-data-chart">No se cargaron expedientes mensuales para esta estructura.</p>
                 ) : estatusSummaryMensuales.length > 0 ? (

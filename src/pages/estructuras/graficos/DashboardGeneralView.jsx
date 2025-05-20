@@ -94,7 +94,7 @@ export const DashboardGeneralView = ({ userInfo }) => {
 
             {/* Sección para Expedientes Mensuales*/}
             <div className="dashboard-section">
-                <h3>Distribución Global de Estatus</h3>
+                <h3>Estatus de los Expedientes Mensuales</h3>
                  <p className="section-subtitle">
                     Análisis de los 6 tipos de exp. mensuales clave para {totalEstructurasConExpMensuales} estructura(s)
                     ({totalExpMensualesAnalizados} instancias de expedientes).
@@ -129,7 +129,7 @@ export const DashboardGeneralView = ({ userInfo }) => {
             <hr className="dashboard-divider"/>
 
             <div className="dashboard-section">
-                <h3>Cumplimiento Mensual Global (Exp. Mensuales Clave)</h3>
+                <h3>Cumplimiento Mensual Global</h3>
                 <div className="year-selector-dashboard">
                     <label htmlFor="year-select-global-dashboard">Seleccionar Año: </label>
                     <select
