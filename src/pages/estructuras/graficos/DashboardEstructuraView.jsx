@@ -8,7 +8,6 @@ import { useDashboardEstructuraData } from '../../../hooks/useDashboardEstructur
 import './DashboardEstructuraView.css';
 
 // Colores para los gráficos de pastel
-const PIE_CHART_COLORS_MENSUALES = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#D9534F', '#5C6BC0'];
 const PIE_CHART_COLORS_GENERALES = ['#6A1B9A', '#AD1457', '#1E88E5', '#00ACC1', '#43A047', '#FDD835', '#FB8C00'];
 
 // Custom Tooltip (sin cambios)
@@ -88,35 +87,7 @@ export const DashboardEstructuraView = ({
                 )}
             </div>
 
-            <hr className="dashboard-divider"/>
-
-            {/* SECCIÓN PARA ESTATUS DE EXPEDIENTES MENSUALES */}
-            <div className="dashboard-section">
-                <h3>Distribución de Estatus (Exp. Mensuales Clave)</h3>
-                {noHayDatosMensuales ? (
-                     <p className="no-data-chart">No se cargaron expedientes mensuales para esta estructura.</p>
-                ) : estatusSummaryMensuales.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
-                        <PieChart>
-                            <Pie
-                                data={estatusSummaryMensuales} cx="50%" cy="50%" labelLine={false}
-                                label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
-                                outerRadius={100} fill="#8884d8" dataKey="value" nameKey="name"
-                            >
-                                {estatusSummaryMensuales.map((entry, index) => (
-                                    <Cell key={`cell-mensual-${index}`} fill={PIE_CHART_COLORS_MENSUALES[index % PIE_CHART_COLORS_MENSUALES.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip formatter={(value, name) => [`${value} expediente(s)`, name]} />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <p className="no-data-chart">No hay datos de estatus para los expedientes mensuales.</p>
-                )}
-            </div>
-
-            <hr className="dashboard-divider"/>
+          
 
              {/* SECCIÓN PARA CUMPLIMIENTO DE CHECKS MENSUALES */}
             <div className="dashboard-section">

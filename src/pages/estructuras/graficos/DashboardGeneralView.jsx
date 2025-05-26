@@ -7,8 +7,7 @@ import {
 } from 'recharts';
 import './DashboardGeneralView.css';
 
-const PIE_CHART_COLORS_MONTHLY = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#D9534F', '#5C6BC0', '#A1887F'];
-const PIE_CHART_COLORS_GENERAL = ['#6A1B9A', '#AD1457', '#1E88E5', '#00ACC1', '#43A047', '#FDD835', '#FB8C00']; // Diferentes colores
+const PIE_CHART_COLORS_GENERAL = ['#6A1B9A', '#AD1457', '#1E88E5', '#00ACC1', '#43A047', '#FDD835', '#FB8C00'];
 const BAR_CHART_COLOR_CUMPLIMIENTO = '#82ca9d';
 
 const CustomTooltipBar = ({ active, payload, label }) => { /* ... (sin cambios) ... */ 
@@ -89,44 +88,7 @@ export const DashboardGeneralView = ({ userInfo }) => {
                     <p className="no-data-chart">No hay datos de estatus para expedientes generales.</p>
                 )}
             </div>
-
-            <hr className="dashboard-divider"/>
-
-            {/* Sección para Expedientes Mensuales*/}
-            <div className="dashboard-section">
-                <h3>Distribución Global de Estatus</h3>
-                 <p className="section-subtitle">
-                    Análisis de los 6 tipos de exp. mensuales clave para {totalEstructurasConExpMensuales} estructura(s)
-                    ({totalExpMensualesAnalizados} instancias de expedientes).
-                </p>
-                {aggregatedMonthlyEstatusData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={350}>
-                        <PieChart>
-                            <Pie
-                                data={aggregatedMonthlyEstatusData}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
-                                outerRadius={110}
-                                fill="#8884d8"
-                                dataKey="value"
-                                nameKey="name"
-                            >
-                                {aggregatedMonthlyEstatusData.map((entry, index) => (
-                                    <Cell key={`cell-monthly-estatus-${index}`} fill={PIE_CHART_COLORS_MONTHLY[index % PIE_CHART_COLORS_MONTHLY.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip formatter={(value, name) => [`${value} instancia(s)`, name]} />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <p className="no-data-chart">No hay datos de estatus para los expedientes mensuales clave.</p>
-                )}
-            </div>
-
-            <hr className="dashboard-divider"/>
+          
 
             <div className="dashboard-section">
                 <h3>Cumplimiento Mensual Global (Exp. Mensuales Clave)</h3>

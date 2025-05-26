@@ -1,15 +1,14 @@
-// src/pages/estructuras/detalle/EstructuraDetalle.jsx
-
-import React, { useState, useEffect } from 'react'; // useCallback ya no es estrictamente necesario aquí si no se pasan funciones que lo requieran a useMemo o useEffect sin cambiar
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Timestamp } from 'firebase/firestore';
 
 // Vistas de Subsección
 import { AntecedentesSocietariosView } from './AntecedentesSocietariosView';
 import { ExpedientesAsociadosView } from './ExpedientesAsociadosView';
 import { ExpedientesMensualesView } from './ExpedientesMensualesView';
 import { EstadosDeCuentaView } from './EstadosDeCuentaView';
-import { DashboardEstructuraView } from '../graficos/DashboardEstructuraView'; 
+import { DashboardEstructuraView } from '../graficos/DashboardEstructuraView';
+import { ContabilidadView } from './ContabilidadView';
+import { PersonalView } from './PersonalView';
 
 // Modales
 import { AddAntecedenteModal } from '../../../modals/AddAntecedenteModal';
@@ -18,6 +17,7 @@ import { AddEstadoCuentaModal } from '../../../modals/AddEstadoCuentaModal';
 import { EditEstadoCuentaModal } from '../../../modals/EditEstadoCuentaModal';
 import { AddPrestamoModal } from '../../../modals/AddPrestamoModal';
 import { AddExpedienteMensualModal } from '../../../modals/AddExpedienteMensualModal';
+import { AddContabilidadModal } from '../../../modals/AddContabilidadModal';
 
 // Hooks Personalizados
 import { useEstructuraData } from '../../../hooks/useEstructuraData';
@@ -27,6 +27,8 @@ import { useExpedientesMensualesLogic } from '../../../hooks/useExpedientesMensu
 import { useEstadosCuentaLogic } from '../../../hooks/useEstadosCuentaLogic';
 import { useChecksLogic } from '../../../hooks/useChecksLogic';
 import { usePrestamosLogic } from '../../../hooks/usePrestamosLogic';
+import { useContabilidadLogic } from '../../../hooks/useContabilidadLogic';
+import { usePersonalLogic } from '../../../hooks/usePersonalLogic';
 
 import './EstructuraDetalle.css';
 
@@ -47,17 +49,16 @@ const formatDate = (timestamp) => {
     return date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
 };
 
-// El DashboardEstructuraViewPlaceholder se elimina de aquí, ya que se importa el componente real.
-
 export const EstructuraDetalle = () => {
     const { estructuraId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const locationState = location.state;
-    const [activeSubView, setActiveSubView] = useState(locationState?.activeTab || 'antecedentes');
+    const [activeSubView, setActiveSubView] = useState(locationState?.activeTab || 'personal');
 
     const { estructura, loadingEstructura, errorEstructura } = useEstructuraData(estructuraId);
 
+    // --- Hooks de cada sección ---
     const {
         antecedentesArray, expandedAntecedenteIndex, isAddAntecedenteModalOpen,
         isEditAntecedenteModalOpen, antecedenteToEdit, handleOpenAddAntecedenteModal,
@@ -66,41 +67,37 @@ export const EstructuraDetalle = () => {
     } = useAntecedentesLogic(estructura);
 
     const {
-        expedientes: expedientesGenerales,
-        loadingExpedientes: loadingExpedientesGenerales,
-        errorExpedientes: errorExpedientesGenerales,
-        isCreatingDefaults: isCreatingDefaultsGenerales,
+        expedientes: expedientesGenerales, loadingExpedientes: loadingExpedientesGenerales,
+        errorExpedientes: errorExpedientesGenerales, isCreatingDefaults: isCreatingDefaultsGenerales,
         fetchExpedientes: fetchExpedientesGenerales,
         handleUpdateExpedienteEnDetalle: handleUpdateExpedienteGeneral,
         addDefaultExpedientesToEstructura: addDefaultExpGenerales
     } = useExpedientesLogic(estructuraId);
 
     const {
-        expedientesMensuales,
-        loadingExpedientesMensuales,
-        errorExpedientesMensuales,
-        isCreatingDefaultMensuales,
-        fetchExpedientesMensuales,
-        addDefaultExpedientesMensualesToEstructura,
-        handleUpdateExpedienteMensual,
-        addNewCustomExpedienteMensual
+        expedientesMensuales, loadingExpedientesMensuales, errorExpedientesMensuales,
+        isCreatingDefaultMensuales, fetchExpedientesMensuales, addDefaultExpedientesMensualesToEstructura,
+        handleUpdateExpedienteMensual, addNewCustomExpedienteMensual // Necesario para el modal
     } = useExpedientesMensualesLogic(estructuraId);
 
-    const [isAddCustomExpMensualModalOpen, setIsAddCustomExpMensualModalOpen] = useState(false);
-    const handleOpenAddCustomExpMensualModal = () => setIsAddCustomExpMensualModalOpen(true);
-    const handleCloseAddCustomExpMensualModal = () => setIsAddCustomExpMensualModalOpen(false);
+    const {
+        contabilidadItems, loadingContabilidad, errorContabilidad,
+        isCreatingDefaultContabilidad, fetchContabilidadData, addDefaultContabilidadItemsToEstructura,
+        handleUpdateContabilidadItem, addNewCustomContabilidadItem // Necesario para el modal
+    } = useContabilidadLogic(estructuraId);
 
-    const handleSaveNuevoCustomExpMensual = async (nuevoExpData) => {
-        if (!estructuraId) { alert("ID de estructura no disponible."); return; }
-        const result = await addNewCustomExpedienteMensual(estructuraId, nuevoExpData);
-        if (result.success) {
-            alert(result.message);
-            await fetchExpedientesMensuales();
-        } else {
-            alert(result.message || "Error al guardar el nuevo tipo de expediente mensual.");
-        }
-        handleCloseAddCustomExpMensualModal();
-    };
+    // Hook de Personal (con la estructura correcta para el modelo híbrido)
+    const {
+        personalIndex,
+        selectedEmpleadoDetails,
+        loadingPersonal,
+        errorPersonal,
+        fetchPersonalIndex,
+        fetchEmpleadoDetails,
+        addEmpleado,
+        updateDocumentoStatus,
+        // addCustomDocumento, // Asegúrate de que tu hook usePersonalLogic lo retorne si lo usas en PersonalView
+    } = usePersonalLogic(estructuraId);
 
     const {
         estadosCuenta, loadingEstadosCuenta, errorEstadosCuenta, fetchEstadosDeCuenta,
@@ -118,68 +115,97 @@ export const EstructuraDetalle = () => {
 
     const {
         isAddPrestamoModalOpen, openAddPrestamoModal, closeAddPrestamoModal,
-        saveNuevoPrestamo, isSavingPrestamo,
+        saveNuevoPrestamo,
     } = usePrestamosLogic();
+    
+    // --- State y Handlers para Modales (que no vienen de hooks) ---
     const [expedienteParaPrestamo, setExpedienteParaPrestamo] = useState(null);
+    const [isAddContabilidadModalOpen, setIsAddContabilidadModalOpen] = useState(false);
+    const [isAddCustomExpMensualModalOpen, setIsAddCustomExpMensualModalOpen] = useState(false);
 
+    const openAddContabilidadModalHandler = () => setIsAddContabilidadModalOpen(true);
+    const closeAddContabilidadModalHandler = () => setIsAddContabilidadModalOpen(false);
+    const handleOpenAddCustomExpMensualModal = () => setIsAddCustomExpMensualModalOpen(true);
+    const handleCloseAddCustomExpMensualModal = () => setIsAddCustomExpMensualModalOpen(false);
+    
     const handleOpenPrestamoModalForExpediente = (expedienteInfo) => {
-        setExpedienteParaPrestamo(expedienteInfo); openAddPrestamoModal();
+        setExpedienteParaPrestamo(expedienteInfo);
+        openAddPrestamoModal();
     };
-    const handleClosePrestamoModal = () => {
-        closeAddPrestamoModal(); setExpedienteParaPrestamo(null);
-    };
+    
     const handleSavePrestamoWrapper = async (prestamoDataFromModal) => {
         if (!expedienteParaPrestamo?.id || !estructuraId) {
             throw new Error("No se pudo determinar el expediente para el préstamo.");
         }
         try {
             await saveNuevoPrestamo(prestamoDataFromModal, estructuraId, expedienteParaPrestamo.id);
-            setExpedienteParaPrestamo(null);
+            setExpedienteParaPrestamo(null); // Cierra el modal y limpia el estado
+            closeAddPrestamoModal();
         } catch (error) {
-            throw error;
+            console.error("Error al guardar préstamo:", error);
+            alert("Error al guardar el préstamo: " + error.message);
+            // Considera no cerrar el modal aquí para que el usuario pueda reintentar o corregir.
         }
     };
 
-    const handleAddDefaultGeneralesClick = async () => {
-        if (!estructuraId) { alert("Error: No se ha identificado la estructura actual."); return; }
-        const result = await addDefaultExpGenerales(estructuraId);
+    // Handlers para los modales que causaban error (definidos aquí)
+    const handleSaveNuevoContabilidadItem = async (nuevoItemData) => {
+        if (!estructuraId) { alert("ID de estructura no disponible."); return; }
+        // addNewCustomContabilidadItem viene de useContabilidadLogic
+        const result = await addNewCustomContabilidadItem(estructuraId, nuevoItemData);
         if (result && result.success) {
-            alert(result.message || "Expedientes generales procesados.");
-            await fetchExpedientesGenerales();
+            alert(result.message || "Registro contable guardado.");
+            await fetchContabilidadData();
         } else {
-            alert(result?.message || "Error al cargar expedientes generales.");
+            alert(result?.message || "Error al guardar el nuevo registro contable.");
         }
+        closeAddContabilidadModalHandler();
     };
 
-    const handleAddDefaultMensualesClick = async () => {
-        if (!estructuraId) { alert("Error: No se ha identificado la estructura actual."); return; }
-        const result = await addDefaultExpedientesMensualesToEstructura(estructuraId);
+    const handleSaveNuevoCustomExpMensual = async (nuevoExpData) => {
+        if (!estructuraId) { alert("ID de estructura no disponible."); return; }
+        // addNewCustomExpedienteMensual viene de useExpedientesMensualesLogic
+        const result = await addNewCustomExpedienteMensual(estructuraId, nuevoExpData);
         if (result && result.success) {
-            alert(result.message || "Expedientes mensuales procesados.");
+            alert(result.message || "Expediente mensual personalizado guardado.");
             await fetchExpedientesMensuales();
         } else {
-            alert(result?.message || "Error al cargar expedientes mensuales.");
+            alert(result?.message || "Error al guardar el nuevo tipo de expediente mensual.");
         }
+        handleCloseAddCustomExpMensualModal();
     };
-
+    
+    // --- Lógica para cargar datos al cambiar de vista ---
     useEffect(() => {
-        if (estructuraId) {
-            if (activeSubView === 'expedientes') {
+        if (!estructuraId) return;
+
+        switch (activeSubView) {
+            case 'antecedentes':
+                // La lógica de antecedentes se basa en el objeto 'estructura', no requiere fetch.
+                break;
+            case 'expedientes':
                 fetchExpedientesGenerales();
-            } else if (activeSubView === 'exp_mensuales') {
+                break;
+            case 'exp_mensuales':
                 fetchExpedientesMensuales();
-            } else if (activeSubView === 'estados_cuenta') {
+                break;
+            case 'estados_cuenta':
                 fetchEstadosDeCuenta();
-            } else if (activeSubView === 'dashboard_estructura') { // <-- AÑADIDO PARA EL DASHBOARD DE ESTRUCTURA
-                // Asegurar que los datos de expedientes mensuales estén cargados para el dashboard
-                // Si ya se cargaron por la vista 'exp_mensuales', no es estrictamente necesario volver a llamar
-                // pero por consistencia y si el usuario navega directo, es bueno tenerlo.
-                // Podrías añadir una condición para no recargar si ya existen y no están loading.
+                break;
+            case 'dashboard_estructura':
                 fetchExpedientesMensuales();
-            }
-            // else if (activeSubView === 'antecedentes') { /* Lógica de carga de antecedentes si es necesario */ }
+                fetchExpedientesGenerales();
+                break;
+            case 'contabilidad':
+                fetchContabilidadData();
+                break;
+            case 'personal':
+                fetchPersonalIndex(); // Se llama a la función correcta
+                break;
+            default:
+                break;
         }
-    }, [activeSubView, estructuraId, fetchExpedientesGenerales, fetchExpedientesMensuales, fetchEstadosDeCuenta]);
+    }, [activeSubView, estructuraId]); // Las dependencias de fetch se quitan si son estables (useCallback sin deps cambiantes)
 
     if (loadingEstructura) return <div className="detalle-status-container"><p>Cargando estructura...</p></div>;
     if (errorEstructura) return <div className="detalle-status-container error"><p>{errorEstructura}</p></div>;
@@ -203,10 +229,12 @@ export const EstructuraDetalle = () => {
                 <button className={`subview-button ${activeSubView === 'antecedentes' ? 'active' : ''}`} onClick={() => setActiveSubView('antecedentes')}>Antecedentes</button>
                 <button className={`subview-button ${activeSubView === 'expedientes' ? 'active' : ''}`} onClick={() => setActiveSubView('expedientes')}>Exp. Generales</button>
                 <button className={`subview-button ${activeSubView === 'exp_mensuales' ? 'active' : ''}`} onClick={() => setActiveSubView('exp_mensuales')}>Exp. Mensuales</button>
-                <button className={`subview-button ${activeSubView === 'dashboard_estructura' ? 'active' : ''}`} onClick={() => setActiveSubView('dashboard_estructura')}>Dashboard</button> {/* <-- NUEVO BOTÓN */}
+                <button className={`subview-button ${activeSubView === 'dashboard_estructura' ? 'active' : ''}`} onClick={() => setActiveSubView('dashboard_estructura')}>Dashboard</button>
                 <button className={`subview-button ${activeSubView === 'estados_cuenta' ? 'active' : ''}`} onClick={() => setActiveSubView('estados_cuenta')}>Cuentas y Control</button>
+                <button className={`subview-button ${activeSubView === 'contabilidad' ? 'active' : ''}`} onClick={() => setActiveSubView('contabilidad')}>Contabilidad</button>
+                <button className={`subview-button ${activeSubView === 'personal' ? 'active' : ''}`} onClick={() => setActiveSubView('personal')}>Personal</button>
             </div>
-
+            
             {activeSubView === 'antecedentes' && (
                 <AntecedentesSocietariosView
                     antecedentes={antecedentesArray}
@@ -217,60 +245,43 @@ export const EstructuraDetalle = () => {
                     formatDate={formatDate}
                 />
             )}
-
             {activeSubView === 'expedientes' && (
-                <>
-                    <div style={{ margin: "20px 0", textAlign: "right" }}>
-                        <button onClick={handleAddDefaultGeneralesClick} disabled={isCreatingDefaultsGenerales || loadingExpedientesGenerales} className="button-primary">
-                            {isCreatingDefaultsGenerales ? "Cargando..." : "Cargar Exp. Generales Pred."}
-                        </button>
-                    </div>
-                    <ExpedientesAsociadosView
-                        estructuraId={estructuraId}
-                        estructuraNombre={estructura?.RazonSocial}
-                        expedientes={expedientesGenerales}
-                        loading={loadingExpedientesGenerales || isCreatingDefaultsGenerales}
-                        error={errorExpedientesGenerales}
-                        onUpdateExpediente={handleUpdateExpedienteGeneral}
-                        formatDate={formatDate}
-                        onOpenPrestamoModal={handleOpenPrestamoModalForExpediente}
-                        highlightedExpedienteId={locationState?.highlightExpediente}
-                    />
-                </>
-            )}
-
-            {activeSubView === 'exp_mensuales' && (
-                <>
-                    <div style={{ margin: "20px 0", textAlign: "right" }}>
-                        <button onClick={handleAddDefaultMensualesClick} disabled={isCreatingDefaultMensuales || loadingExpedientesMensuales} className="button-primary">
-                            {isCreatingDefaultMensuales ? "Cargando..." : "Cargar Exp. Mensuales Pred."}
-                        </button>
-                    </div>
-                    <ExpedientesMensualesView
-                        expedientesMensuales={expedientesMensuales}
-                        loading={loadingExpedientesMensuales || isCreatingDefaultMensuales}
-                        error={errorExpedientesMensuales}
-                        estructuraId={estructuraId}
-                        estructuraNombre={estructura?.RazonSocial}
-                        onUpdateExpedienteMensual={handleUpdateExpedienteMensual}
-                        onOpenAddModal={handleOpenAddCustomExpMensualModal}
-                        formatDate={formatDate}
-                    />
-                </>
-            )}
-
-            {activeSubView === 'dashboard_estructura' && ( // <-- NUEVA SECCIÓN DE RENDERIZADO
-                <DashboardEstructuraView // Usando el componente importado
+                 <ExpedientesAsociadosView
                     estructuraId={estructuraId}
-                    estructuraNombre={estructura?.RazonSocial || "Esta Estructura"}
-                    expedientesMensuales={expedientesMensuales} 
-                    expedientesGenerales={expedientesGenerales}
-                    loading={loadingExpedientesMensuales} 
-                    error={errorExpedientesMensuales}    
+                    estructuraNombre={estructura?.RazonSocial}
+                    expedientes={expedientesGenerales}
+                    loading={loadingExpedientesGenerales || isCreatingDefaultsGenerales}
+                    error={errorExpedientesGenerales}
+                    onUpdateExpediente={handleUpdateExpedienteGeneral}
+                    onAddDefaultExpedientes={addDefaultExpGenerales}
+                    formatDate={formatDate}
+                    onOpenPrestamoModal={handleOpenPrestamoModalForExpediente}
+                    highlightedExpedienteId={locationState?.highlightExpediente}
+                />
+            )}
+            {activeSubView === 'exp_mensuales' && (
+                <ExpedientesMensualesView
+                    estructuraId={estructuraId}
+                    estructuraNombre={estructura?.RazonSocial}
+                    expedientesMensuales={expedientesMensuales}
+                    loading={loadingExpedientesMensuales || isCreatingDefaultMensuales}
+                    error={errorExpedientesMensuales}
+                    onUpdateExpedienteMensual={handleUpdateExpedienteMensual}
+                    onAddDefaultExpedientesMensuales={addDefaultExpedientesMensualesToEstructura}
+                    onOpenAddModal={handleOpenAddCustomExpMensualModal}
                     formatDate={formatDate}
                 />
             )}
-
+            {activeSubView === 'dashboard_estructura' && (
+                <DashboardEstructuraView
+                    estructuraId={estructuraId}
+                    estructuraNombre={estructura?.RazonSocial || "Esta Estructura"}
+                    expedientesMensuales={expedientesMensuales}
+                    expedientesGenerales={expedientesGenerales}
+                    formatDate={formatDate}
+                    // Asegúrate de pasar loading/error si el dashboard los necesita
+                />
+            )}
             {activeSubView === 'estados_cuenta' && (
                 <EstadosDeCuentaView
                     estadosCuenta={estadosCuenta}
@@ -289,14 +300,58 @@ export const EstructuraDetalle = () => {
                     onInitializeYearlyChecks={handleInitializeYearlyChecks}
                 />
             )}
+            {activeSubView === 'contabilidad' && (
+                <ContabilidadView
+                    contabilidadData={contabilidadItems} 
+                    loading={loadingContabilidad || isCreatingDefaultContabilidad}
+                    error={errorContabilidad}
+                    estructuraId={estructuraId}
+                    estructuraNombre={estructura?.RazonSocial}
+                    onUpdateContabilidad={handleUpdateContabilidadItem}
+                    onAddDefaultContabilidadItems={addDefaultContabilidadItemsToEstructura}
+                    onOpenAddModal={openAddContabilidadModalHandler}
+                    formatDate={formatDate}
+                />
+            )}
+            
+            {activeSubView === 'personal' && (
+                <PersonalView
+                    personalIndex={personalIndex}
+                    selectedEmpleadoDetails={selectedEmpleadoDetails}
+                    loading={loadingPersonal}
+                    error={errorPersonal}
+                    // formatDate no es necesario aquí, a menos que PersonalView lo use
+                    handlers={{
+                        fetchEmpleadoDetails,
+                        addEmpleado,
+                        updateDocumentoStatus,
+                        // addCustomDocumento, // Si lo implementas y necesitas en PersonalView
+                    }}
+                />
+            )}
 
-            {/* Modales */}
+            {/* --- Modales --- */}
             <AddAntecedenteModal isOpen={isAddAntecedenteModalOpen} onClose={handleCloseAddAntecedenteModal} onSave={handleSaveAntecedente}/>
             <EditAntecedenteModal isOpen={isEditAntecedenteModalOpen} onClose={handleCloseEditAntecedenteModal} onUpdate={handleUpdateAntecedente} initialData={antecedenteToEdit}/>
             <AddExpedienteMensualModal isOpen={isAddCustomExpMensualModalOpen} onClose={handleCloseAddCustomExpMensualModal} onSave={handleSaveNuevoCustomExpMensual} estructuraId={estructuraId}/>
             <AddEstadoCuentaModal isOpen={isAddEstadoCuentaModalOpen} onClose={handleCloseAddEstadoCuentaModal} onSave={handleSaveNuevoEstadoCuenta} estructuraId={estructuraId} />
             <EditEstadoCuentaModal isOpen={isEditEstadoCuentaModalOpen} onClose={handleCloseEditEstadoCuentaModal} onUpdate={handleUpdateEstadoCuenta} initialData={estadoCuentaToEdit} />
-            <AddPrestamoModal isOpen={isAddPrestamoModalOpen} onClose={handleClosePrestamoModal} onSavePrestamo={handleSavePrestamoWrapper} expedienteId={expedienteParaPrestamo?.id} expedienteNombre={expedienteParaPrestamo?.nombre} />
+            <AddPrestamoModal 
+                isOpen={isAddPrestamoModalOpen} 
+                onClose={() => {
+                    closeAddPrestamoModal(); 
+                    setExpedienteParaPrestamo(null);
+                }} 
+                onSavePrestamo={handleSavePrestamoWrapper} 
+                expedienteId={expedienteParaPrestamo?.id} 
+                expedienteNombre={expedienteParaPrestamo?.nombre} 
+            />
+            <AddContabilidadModal 
+                isOpen={isAddContabilidadModalOpen} 
+                onClose={closeAddContabilidadModalHandler} 
+                onSave={handleSaveNuevoContabilidadItem} 
+                estructuraId={estructuraId}
+            />
         </div>
     );
 };

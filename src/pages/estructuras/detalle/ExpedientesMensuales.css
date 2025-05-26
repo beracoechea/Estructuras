@@ -1,174 +1,161 @@
-/* Idealmente en: src/pages/estructuras/detalle/ExpedientesMensuales.css */
-/* O en un CSS global si prefieres */
+/* src/pages/estructuras/detalle/ExpedientesMensuales.css */
 
-
-.expedientes-list-header { /* Reutilizado de otros componentes, asegúrate que existe */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+.expedientes-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 .expedientes-list-header h2 {
-  margin: 0;
-  font-size: 1.5em; /* Ajusta según tu diseño */
-  color: #333;
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
 }
 
 .year-selector {
-  margin-bottom: 25px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    margin-bottom: 25px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .year-selector strong {
-  margin: 0 15px;
-  font-size: 1.3em;
-  color: #2c3e50; /* Un color principal */
-  min-width: 80px; /* Para que no salte mucho al cambiar de año */
-  display: inline-block;
+    margin: 0 15px;
+    font-size: 1.3em;
+    color: #2c3e50;
+    min-width: 80px;
+    display: inline-block;
 }
 
-.year-selector .button-secondary { /* Asume que tienes esta clase o crea una similar */
-  padding: 6px 12px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.year-selector .button-secondary {
+    padding: 6px 12px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 .year-selector .button-secondary:hover {
-  background-color: #5a6268;
+    background-color: #5a6268;
 }
 
-
-/* Estilo para cada tarjeta de expediente mensual */
 .mensual-card {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-left: 5px solid #3498db; /* Un color distintivo para mensuales */
-  border-radius: 5px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-left: 5px solid #3498db;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .mensual-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .mensual-card-header h3 {
-  margin: 0;
-  font-size: 1.2em;
-  color: #3498db; /* Mismo color que el borde izquierdo */
+    margin: 0;
+    font-size: 1.2em;
+    color: #3498db;
 }
 
-.button-edit-sm { /* Botón pequeño para "Editar Info" */
-  padding: 4px 8px;
-  font-size: 0.8em;
-  background-color: #f0cc04;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  cursor: pointer;
+.button-edit-sm {
+    padding: 4px 8px;
+    font-size: 0.8em;
+    background-color: #f0f0f0; /* Un color neutro */
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 3px; /* Más sutil */
+    cursor: pointer;
 }
 .button-edit-sm:hover {
-  background-color: #e0e0e0;
+    background-color: #e0e0e0;
 }
 
-
 .expediente-descripcion {
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 10px;
-  white-space: pre-wrap; /* Para respetar saltos de línea en descripción */
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
 }
 
 .recordatorio-vencimiento {
-  font-size: 0.85em;
-  color: #777;
-  margin-top: 5px;
-  margin-bottom: 15px;
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 .recordatorio-vencimiento strong {
-  color: #555;
+    color: #555;
 }
 
 .checks-mensuales-container {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 .checks-mensuales-container h4 {
-  font-size: 1em;
-  color: #444;
-  margin-bottom: 10px;
+    font-size: 1em;
+    color: #444;
+    margin-bottom: 10px;
 }
 
 .checks-grid {
-  display: grid;
-  /* Crea 6 columnas de igual fracción del espacio disponible */
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px; /* Espacio entre los checkboxes */
-  /* Opcional: puedes añadir un gap vertical mayor si quieres más separación entre filas */
-  /* row-gap: 15px; */
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 columnas para los meses */
+    gap: 10px;
 }
 
-/* Los estilos para .check-item y su contenido permanecen igual */
 .check-item {
-  display: flex;
-  align-items: center;
-  background-color: #f9f9f9;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #eee;
-  /* Podrías querer centrar el contenido si las columnas son anchas */
-  /* justify-content: center; */
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #eee;
 }
 
 .check-item label {
-  font-size: 0.9em;
-  color: #333;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  width: 100%; /* El label toma el ancho del .check-item */
+    font-size: 0.9em;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .check-item input[type="checkbox"] {
-  margin-right: 8px;
-  cursor: pointer;
-  transform: scale(1.1);
+    margin-right: 8px;
+    cursor: pointer;
+    transform: scale(1.1);
 }
-/* Estilos para el modal de añadir expediente mensual (si es diferente) */
-.modal-add-exp-mensual .form-group { /* Reutiliza form-group si ya existe */
-  margin-bottom: 15px;
+
+/* Estilos para el modal de añadir expediente mensual */
+/* Estos estilos aplicarían al componente AddExpedienteMensualModal.jsx */
+.modal-add-exp-mensual .form-group {
+    margin-bottom: 15px;
 }
 .modal-add-exp-mensual .form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
 }
 .modal-add-exp-mensual .form-group input[type="text"],
 .modal-add-exp-mensual .form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Para que padding no afecte el width total */
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 .modal-add-exp-mensual .form-group textarea {
-  min-height: 70px;
-  resize: vertical;
+    min-height: 70px;
+    resize: vertical;
 }
-
-/* Reutiliza clases de botones de modales existentes si es posible */
-/* .modal-actions { ... } */
-/* .button-save { ... } */
-/* .button-cancel { ... } */

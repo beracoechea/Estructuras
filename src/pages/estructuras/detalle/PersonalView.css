@@ -1,0 +1,158 @@
+/* --- Contenedor Principal --- */
+.personal-view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* Espacio entre las tarjetas */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    padding: 10px;
+}
+
+/* --- Estilo de Tarjetas (Cards) --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.25rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.card h4 {
+    color: #1a2a4c;
+    margin-top: 16px;
+    margin-bottom: 12px;
+}
+
+.card h5 {
+    color: #555;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+
+/* --- Grupos de Formularios --- */
+.form-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap; /* Para que se ajuste en pantallas pequeñas */
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group select {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* --- Botones --- */
+.button-primary, .button-secondary {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+.button-primary:disabled {
+    background-color: #a0c7ff;
+    cursor: not-allowed;
+}
+
+.button-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.button-secondary:hover {
+    background-color: #5a6268;
+}
+
+.button-secondary:disabled {
+    background-color: #b5b9bd;
+    cursor: not-allowed;
+}
+
+/* --- Tabla de Documentos --- */
+.document-list {
+    margin-top: 20px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.custom-table th, .custom-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-table th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+}
+
+.custom-table tr:last-child td {
+    border-bottom: none;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* --- Checkbox Personalizado --- */
+.custom-checkbox {
+    transform: scale(1.4); /* Hacer el checkbox un poco más grande */
+    cursor: pointer;
+}
+
+/* --- Sección para Añadir Documentos Personalizados --- */
+.add-custom-document {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}

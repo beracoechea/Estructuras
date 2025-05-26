@@ -1,0 +1,88 @@
+/* src/pages/estructuras/detalle/ContabilidadView.css */
+.contabilidad-cards-view .year-selector {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.contabilidad-cards-view .year-selector button {
+    margin: 0 10px;
+}
+
+.contabilidad-cards-view .antecedentes-cards-container {
+    /* Mismos estilos que en ExpedientesMensuales.css si quieres consistencia */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.contabilidad-cards-view .antecedente-card { /* O .contabilidad-card */
+    /* Mismos estilos que en ExpedientesMensuales.css */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.contabilidad-cards-view .mensual-card-header { /* Reutilizando clase */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.contabilidad-cards-view .mensual-card-header h3 {
+    margin: 0;
+}
+.contabilidad-cards-view .frecuencia-tag {
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 5px;
+}
+
+
+.contabilidad-cards-view .expediente-descripcion {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+    min-height: 30px; /* Para alinear tarjetas */
+}
+
+
+.contabilidad-cards-view .checks-mensuales-container,
+.contabilidad-cards-view .checks-anuales-container {
+    margin-top: 15px;
+}
+
+.contabilidad-cards-view .checks-mensuales-container h4,
+.contabilidad-cards-view .checks-anuales-container h4 {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.contabilidad-cards-view .checks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas para los meses */
+    gap: 8px;
+}
+
+.contabilidad-cards-view .check-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.contabilidad-cards-view .check-item label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.contabilidad-cards-view .check-item input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+.contabilidad-cards-view .status-container.no-data p {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
