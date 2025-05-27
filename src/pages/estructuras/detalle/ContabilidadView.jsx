@@ -1,18 +1,19 @@
-// src/pages/estructuras/detalle/ContabilidadView.jsx
 import React, { useState } from 'react';
-import './ContabilidadView.css'; // Crea este archivo CSS si necesitas estilos específicos
+import { AnnualComment } from './AnnualComment';
+import './ContabilidadView.css';
 
 export const ContabilidadView = ({
     contabilidadData,
     onUpdateContabilidad,
     loading,
     error,
-    estructuraNombre,
-    // formatDate, // Si necesitas formatear fechas para items anuales, por ejemplo
+    onAddDefaultContabilidadItems,
+   
 }) => {
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
+    // ... (el resto de tu lógica de handleToggleCheck no necesita cambios)
     const handleToggleCheck = async (item, year, monthIndex = null) => {
         const itemId = item.id || item.nombre;
         let updatedData = {};
@@ -42,17 +43,27 @@ export const ContabilidadView = ({
         const result = await onUpdateContabilidad(itemId, updatedData);
         if (!result || !result.success) {
             alert(result?.message || "Error al actualizar el registro. El cambio visual podría ser revertido por el hook si la actualización optimista falla.");
-            // El hook se encarga de revertir el estado si la actualización falla.
         }
     };
 
-    if (loading) return <div className="status-container"><p>Cargando registros contables...</p></div>;
+    if (loading && (!contabilidadData || contabilidadData.length === 0)) {
+        return <div className="status-container"><p>Cargando registros contables...</p></div>;
+    }
     if (error) return <div className="status-container error"><p>{error}</p></div>;
 
     return (
-        <div className="detalle-seccion contabilidad-cards-view"> {/* Similar a expedientes-mensuales-view */}
-            {/* El botón para cargar predeterminados está en EstructuraDetalle.jsx */}
-            {/* El botón para añadir custom fue eliminado de esta vista según tu solicitud anterior */}
+        <div className="detalle-seccion contabilidad-cards-view">
+            <div className="contabilidad-actions-header">
+                <button 
+                    onClick={onAddDefaultContabilidadItems}
+                    disabled={loading}
+                    className="button-primary"
+                >
+                    {loading ? 'Cargando...' : 'Cargar Contabilidad Pred.'}
+                </button>
+
+    
+            </div>
 
             <div className="year-selector">
                 <button onClick={() => setCurrentYear(y => y - 1)} className="button-secondary">&lt; Año Ant.</button>
@@ -62,57 +73,69 @@ export const ContabilidadView = ({
 
             {(!contabilidadData || contabilidadData.length === 0) ? (
                 <div className="status-container no-data">
-                    <p>No hay registros contables definidos. Use el botón "Cargar Contabilidad Pred.".</p>
+                    <p>No hay registros contables definidos. Use el botón "Cargar Contabilidad Pred." para empezar.</p>
                 </div>
             ) : (
-                <div className="antecedentes-cards-container"> {/* Reutilizando clase para consistencia visual */}
+                <div className="antecedentes-cards-container">
                     {contabilidadData.map(item => (
-                        <div key={item.id || item.nombre} className="antecedente-card mensual-card"> {/* Reutilizando clase */}
+                        <div key={item.id || item.nombre} className="antecedente-card mensual-card">
                             <div className="mensual-card-header">
                                 <h3>{item.nombre} <span className="frecuencia-tag">({item.frecuencia})</span></h3>
-                                {/* Aquí no hay botón de editar info del item, similar a ExpedientesMensualesView simplificado */}
                             </div>
                             <p className="expediente-descripcion">{item.descripcion || 'Sin descripción detallada.'}</p>
                             
                             {item.frecuencia === 'mensual' && (
-                                <div className="checks-mensuales-container">
-                                    <h4>Cumplimiento {currentYear}:</h4>
-                                    <div className="checks-grid">
-                                        {meses.map((mes, index) => (
-                                            <div key={`${item.id || item.nombre}-${currentYear}-${index}`} className="check-item">
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={item.cumplimientoMensual?.[currentYear]?.[index] || false}
-                                                        onChange={() => handleToggleCheck(item, currentYear, index)}
-                                                    />
-                                                    {mes}
-                                                </label>
-                                            </div>
-                                        ))}
+                                <>
+                                    <div className="checks-mensuales-container">
+                                        <h4>Cumplimiento {currentYear}:</h4>
+                                        <div className="checks-grid">
+                                            {meses.map((mes, index) => (
+                                                <div key={`${item.id || item.nombre}-${currentYear}-${index}`} className="check-item">
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={item.cumplimientoMensual?.[currentYear]?.[index] || false}
+                                                            onChange={() => handleToggleCheck(item, currentYear, index)}
+                                                        />
+                                                        {mes}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                    
+                                    <AnnualComment
+                                        itemId={item.id || item.nombre}
+                                        currentYear={currentYear}
+                                        initialComments={item.comentariosAnuales}
+                                        onUpdate={onUpdateContabilidad}
+                                    />
+                                </>
                             )}
 
                             {item.frecuencia === 'anual' && (
-                                <div className="checks-anuales-container"> {/* Nueva clase para estilo si es necesario */}
-                                    <h4>Cumplimiento {currentYear}:</h4>
-                                    <div className="check-item">
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                checked={item.cumplimientoAnual?.[currentYear] || false}
-                                                onChange={() => handleToggleCheck(item, currentYear)}
-                                            />
-                                            Realizado/Entregado en {currentYear}
-                                        </label>
-                                        {/* Aquí podrías añadir campos de fecha de entrega, etc. si lo manejas */}
+                                <>
+                                    <div className="checks-anuales-container">
+                                        <h4>Cumplimiento {currentYear}:</h4>
+                                        <div className="check-item">
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={item.cumplimientoAnual?.[currentYear] || false}
+                                                    onChange={() => handleToggleCheck(item, currentYear)}
+                                                />
+                                                Cumplido
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                            {/* Considera un placeholder o mensaje si la frecuencia no es ni mensual ni anual */}
-                            {!['mensual', 'anual'].includes(item.frecuencia) && (
-                                <p>Este registro no tiene seguimiento periódico definido.</p>
+                                    
+                                    <AnnualComment
+                                        itemId={item.id || item.nombre}
+                                        currentYear={currentYear}
+                                        initialComments={item.comentariosAnuales}
+                                        onUpdate={onUpdateContabilidad}
+                                    />
+                                </>
                             )}
                         </div>
                     ))}

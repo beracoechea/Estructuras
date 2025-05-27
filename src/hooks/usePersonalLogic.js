@@ -1,8 +1,15 @@
 import { useState, useCallback } from 'react';
-// --- FIREBASE INTEGRATION v9 (MODULAR) ---
-// Asegúrate que la ruta a tu configuración de Firebase sea correcta
-import { firestore } from '../config/firebase-config'; // Ajusta la ruta si es necesario
-import { collection, doc, getDoc, setDoc, updateDoc, writeBatch, FieldValue } from 'firebase/firestore';
+import { firestore } from '../config/firebase-config';
+
+import { 
+    collection, 
+    doc, 
+    getDoc, 
+    setDoc, 
+    updateDoc, 
+    writeBatch, 
+    arrayUnion // <--- ¡Importar arrayUnion aquí! Se quita FieldValue
+} from 'firebase/firestore';
 
 
 const DEFAULT_DOCUMENTOS = [
@@ -12,19 +19,14 @@ const DEFAULT_DOCUMENTOS = [
     { nombre: 'Contrato individual del trabajo', seTiene: false },
     { nombre: 'INE del trabajador', seTiene: false },
     { nombre: 'Recibo de nómina timbrado', seTiene: false },
-    { nombre: 'SUA', seTiene: false },
 ];
 
 export const usePersonalLogic = (estructuraId) => {
-    // El estado 'personalIndex' ahora solo guarda el índice {id, nombre}
     const [personalIndex, setPersonalIndex] = useState([]);
-    // Nuevo estado para guardar los detalles del empleado SELECCIONADO
     const [selectedEmpleadoDetails, setSelectedEmpleadoDetails] = useState(null);
-
     const [loadingPersonal, setLoadingPersonal] = useState(false);
     const [errorPersonal, setErrorPersonal] = useState(null);
 
-    // Carga solo la lista de nombres/IDs para el menú desplegable
     const fetchPersonalIndex = useCallback(async () => {
         if (!estructuraId) return;
         setLoadingPersonal(true);
@@ -40,13 +42,12 @@ export const usePersonalLogic = (estructuraId) => {
             }
         } catch (err) {
             setErrorPersonal('Error al cargar el índice de personal.');
-            console.error(err);
+            console.error("Error en fetchPersonalIndex:", err);
         } finally {
             setLoadingPersonal(false);
         }
     }, [estructuraId]);
 
-    // Carga los detalles completos de un solo empleado bajo demanda
     const fetchEmpleadoDetails = async (empleadoId) => {
         if (!estructuraId || !empleadoId) return;
         setLoadingPersonal(true);
@@ -61,13 +62,12 @@ export const usePersonalLogic = (estructuraId) => {
             }
         } catch (err) {
             setErrorPersonal(err.message);
-            console.error(err);
+            console.error("Error en fetchEmpleadoDetails:", err);
         } finally {
             setLoadingPersonal(false);
         }
     };
 
-    // Añade un empleado, escribiendo en el documento principal y en la subcolección
     const addEmpleado = async (nombreEmpleado) => {
         const nombreLimpio = nombreEmpleado.trim();
         if (!nombreLimpio) return { success: false, message: "El nombre no puede estar vacío." };
@@ -83,7 +83,6 @@ export const usePersonalLogic = (estructuraId) => {
             const newEmpleadoId = `emp_${Date.now()}`;
             const estructuraDocRef = doc(firestore, 'Estructuras', estructuraId);
             const empleadoDocRef = doc(firestore, 'Estructuras', estructuraId, 'Personal', newEmpleadoId);
-
             const batch = writeBatch(firestore);
 
             batch.set(empleadoDocRef, {
@@ -91,30 +90,34 @@ export const usePersonalLogic = (estructuraId) => {
                 documentos: DEFAULT_DOCUMENTOS
             });
 
+            // --- CORRECCIÓN #2: Usar arrayUnion directamente ---
             batch.update(estructuraDocRef, {
-                empleados_idx: FieldValue.arrayUnion({ id: newEmpleadoId, nombre: nombreLimpio })
+                empleados_idx: arrayUnion({ id: newEmpleadoId, nombre: nombreLimpio }) // <--- ¡Así se usa!
             });
 
             await batch.commit();
-
             setPersonalIndex(prev => [...prev, { id: newEmpleadoId, nombre: nombreLimpio }]);
             return { success: true };
 
         } catch (err) {
-            setErrorPersonal("Error al crear el empleado.");
-            console.error(err);
+            setErrorPersonal("Error al crear el empleado."); // Este es tu mensaje genérico
+            console.error("Error específico en addEmpleado:", err); // Este es el error de Firebase
             return { success: false, message: err.message };
         } finally {
             setLoadingPersonal(false);
         }
     };
 
-    // Actualiza el estado de un documento para un empleado específico
     const updateDocumentoStatus = async (empleadoId, nombreDocumento, newStatus) => {
         setLoadingPersonal(true);
         try {
             const empleadoRef = selectedEmpleadoDetails;
-            if (!empleadoRef || empleadoRef.id !== empleadoId) throw new Error("Datos del empleado no cargados.");
+            if (!empleadoRef || empleadoRef.id !== empleadoId) {
+                 // Si no están cargados los detalles, intenta cargarlos o busca en el índice (menos ideal)
+                console.warn("Detalles del empleado no estaban cargados para updateDocumentoStatus, o ID no coincide. EmpleadoID:", empleadoId);
+                setErrorPersonal("No se pudieron actualizar los documentos, intente seleccionar de nuevo al empleado.");
+                return { success: false, message: "Detalles del empleado no cargados." };
+            }
             
             const updatedDocumentos = empleadoRef.documentos.map(doc =>
                 doc.nombre === nombreDocumento ? { ...doc, seTiene: newStatus } : doc
@@ -126,8 +129,8 @@ export const usePersonalLogic = (estructuraId) => {
             setSelectedEmpleadoDetails(prev => ({ ...prev, documentos: updatedDocumentos }));
             return { success: true };
         } catch(err) {
-             setErrorPersonal("Error al actualizar el documento.");
-            console.error(err);
+            setErrorPersonal("Error al actualizar el documento.");
+            console.error("Error específico en updateDocumentoStatus:", err);
             return { success: false, message: err.message };
         } finally {
             setLoadingPersonal(false);

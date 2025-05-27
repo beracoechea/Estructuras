@@ -1,4 +1,23 @@
-/* src/pages/estructuras/detalle/ExpedientesMensuales.css */
+.expedientes-mensuales-actions-header {
+    display: flex;
+    justify-content: flex-start; /* Alinea los botones al inicio (izquierda) */
+    gap: 15px; /* Espacio entre los botones */
+    margin-bottom: 20px; /* Espacio debajo de la barra de acciones */
+    padding-bottom: 15px; /* Espacio interno para que la línea no esté pegada a los botones */
+    border-bottom: 1px solid #e0e0e0; /* Línea separadora sutil */
+    flex-wrap: wrap; /* Permite que los botones pasen a la siguiente línea en pantallas pequeñas */
+}
+
+.expedientes-mensuales-actions-header .button-primary,
+.expedientes-mensuales-actions-header .button-secondary {
+    padding: 10px 15px;
+    font-size: 0.9em;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+}
+
 
 .expedientes-list-header {
     display: flex;

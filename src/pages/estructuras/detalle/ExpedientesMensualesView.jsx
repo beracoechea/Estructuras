@@ -1,14 +1,16 @@
 // src/pages/estructuras/detalle/ExpedientesMensualesView.jsx
-import React, { useState } from 'react'; // useEffect and EditExpedienteModal removed
+import React, { useState } from 'react';
 import './ExpedientesMensuales.css';
 
 export const ExpedientesMensualesView = ({
-    expedientesMensuales, // This prop se actualizará desde el hook con el cambio optimista
-    onUpdateExpedienteMensual, // This is the function from the hook for optimistic updates (primarily for checks)
+    expedientesMensuales,
+    onUpdateExpedienteMensual,
     loading,
     error,
+    onAddDefaultExpedientesMensuales,
 }) => {
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
     const toggleCheck = async (expedienteId, year, monthIndex) => {
         const expedienteActual = expedientesMensuales.find(e => e.id === expedienteId || e.nombre === expedienteId);
@@ -32,20 +34,26 @@ export const ExpedientesMensualesView = ({
         if (!result || !result.success) {
             alert(result?.message || "Error al actualizar el check mensual. El cambio visual ha sido revertido.");
         }
-        // UI is already optimistically updated by the hook.
     };
 
-    const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-
-    if (loading) return <div className="status-container"><p>Cargando expedientes mensuales...</p></div>;
+    if (loading && (!expedientesMensuales || expedientesMensuales.length === 0)) {
+        return <div className="status-container"><p>Cargando expedientes mensuales...</p></div>;
+    }
     if (error) return <div className="status-container error"><p>{error}</p></div>;
 
     return (
         <div className="detalle-seccion expedientes-mensuales-view">
-            {/* Button to add new monthly expedientes might still be here, triggered by onOpenAddModal from parent */}
-            {/* e.g., <button onClick={onOpenAddModal} className="button-primary">Añadir Exp. Mensual</button> */}
-            {/* This part depends on where the "add" button is located in your UI structure. */}
-            {/* For now, assuming onOpenAddModal is called from outside this component's direct render. */}
+            
+            {/* =====> 2. AÑADE LA BARRA DE ACCIONES CON LOS BOTONES <===== */}
+            <div className="expedientes-mensuales-actions-header">
+                <button 
+                    onClick={onAddDefaultExpedientesMensuales} 
+                    disabled={loading}
+                    className="button-primary"
+                >
+                    {loading ? 'Cargando...' : 'Cargar Exp. Mensuales Pred.'}
+                </button>
+            </div>
 
 
             <div className="year-selector">
@@ -64,13 +72,8 @@ export const ExpedientesMensualesView = ({
                         <div key={exp.id || exp.nombre} className="antecedente-card mensual-card">
                             <div className="mensual-card-header">
                                 <h3>{exp.nombre}</h3>
-                                {/* Removed Edit Info Button */}
                             </div>
-                            {/* Removed description, general reminder date, and status display */}
-                            {/* {exp.descripcion && <p className="expediente-descripcion">{exp.descripcion}</p>} */}
-                            {/* {exp.fechaVencimientoRecordatorioGeneral && ... } */}
-                            {/* <p><strong>Estatus:</strong> {exp.estatus || 'N/A'}</p> */}
-
+                            
                             <div className="checks-mensuales-container">
                                 <h4>Cumplimiento {currentYear}:</h4>
                                 <div className="checks-grid">
@@ -93,8 +96,6 @@ export const ExpedientesMensualesView = ({
                     ))}
                 </div>
             )}
-
-            {/* Removed EditExpedienteModal rendering */}
         </div>
     );
 };

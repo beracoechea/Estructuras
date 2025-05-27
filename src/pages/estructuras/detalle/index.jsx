@@ -162,6 +162,43 @@ export const EstructuraDetalle = () => {
         closeAddContabilidadModalHandler();
     };
 
+     const handleAddDefaultContabilidad = async () => {
+    const result = await addDefaultContabilidadItemsToEstructura(estructuraId);
+
+    if (result && result.success) {
+      alert(result.message || "Registros predeterminados añadidos con éxito.");
+      
+      fetchContabilidadData();
+    } else {
+      alert(result?.message || "Error al añadir los registros predeterminados.");
+    }
+  };
+  const handleAddDefaultExpMensuales = async () => {
+    const result = await addDefaultExpedientesMensualesToEstructura(estructuraId);
+
+    if (result && result.success) {
+        alert(result.message || "Expedientes mensuales predeterminados añadidos.");
+
+        fetchExpedientesMensuales();
+    } else {
+        alert(result?.message || "Error al añadir los expedientes mensuales.");
+    }
+};
+const handleAddDefaultExpGeneralesHandler = async () => {
+    // Llama a la función del hook para añadir los expedientes a la BD
+    const result = await addDefaultExpGenerales(estructuraId); // Usamos la función correcta del hook useExpedientesLogic
+
+    // Comprueba si la operación fue exitosa
+    if (result && result.success) {
+        alert(result.message || "Expedientes generales predeterminados añadidos.");
+
+        // ¡LA CLAVE! Vuelve a cargar los datos para refrescar la interfaz
+        fetchExpedientesGenerales();
+    } else {
+        alert(result?.message || "Error al añadir los expedientes generales.");
+    }
+};
+
     const handleSaveNuevoCustomExpMensual = async (nuevoExpData) => {
         if (!estructuraId) { alert("ID de estructura no disponible."); return; }
         // addNewCustomExpedienteMensual viene de useExpedientesMensualesLogic
@@ -252,8 +289,8 @@ export const EstructuraDetalle = () => {
                     expedientes={expedientesGenerales}
                     loading={loadingExpedientesGenerales || isCreatingDefaultsGenerales}
                     error={errorExpedientesGenerales}
+                     onAddDefaultExpedientes={handleAddDefaultExpGeneralesHandler}
                     onUpdateExpediente={handleUpdateExpedienteGeneral}
-                    onAddDefaultExpedientes={addDefaultExpGenerales}
                     formatDate={formatDate}
                     onOpenPrestamoModal={handleOpenPrestamoModalForExpediente}
                     highlightedExpedienteId={locationState?.highlightExpediente}
@@ -267,8 +304,7 @@ export const EstructuraDetalle = () => {
                     loading={loadingExpedientesMensuales || isCreatingDefaultMensuales}
                     error={errorExpedientesMensuales}
                     onUpdateExpedienteMensual={handleUpdateExpedienteMensual}
-                    onAddDefaultExpedientesMensuales={addDefaultExpedientesMensualesToEstructura}
-                    onOpenAddModal={handleOpenAddCustomExpMensualModal}
+                    onAddDefaultExpedientesMensuales={handleAddDefaultExpMensuales}
                     formatDate={formatDate}
                 />
             )}
@@ -279,7 +315,6 @@ export const EstructuraDetalle = () => {
                     expedientesMensuales={expedientesMensuales}
                     expedientesGenerales={expedientesGenerales}
                     formatDate={formatDate}
-                    // Asegúrate de pasar loading/error si el dashboard los necesita
                 />
             )}
             {activeSubView === 'estados_cuenta' && (
@@ -305,13 +340,11 @@ export const EstructuraDetalle = () => {
                     contabilidadData={contabilidadItems} 
                     loading={loadingContabilidad || isCreatingDefaultContabilidad}
                     error={errorContabilidad}
-                    estructuraId={estructuraId}
                     estructuraNombre={estructura?.RazonSocial}
                     onUpdateContabilidad={handleUpdateContabilidadItem}
-                    onAddDefaultContabilidadItems={addDefaultContabilidadItemsToEstructura}
+                    onAddDefaultContabilidadItems={handleAddDefaultContabilidad} 
                     onOpenAddModal={openAddContabilidadModalHandler}
-                    formatDate={formatDate}
-                />
+                    />
             )}
             
             {activeSubView === 'personal' && (
